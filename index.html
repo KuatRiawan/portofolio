@@ -8,61 +8,81 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
-            /* Pola dot-grid tech (VERSI SUDAH DIPERBAIKI) */
+            /* Pola dot-grid tech */
             background-color: #0f172a; /* bg-slate-900 */
             background-image: radial-gradient(#1e293b 1px, transparent 1px); /* slate-800 dots */
-            background-size: 1rem 1rem;
+            background-size: 1.5rem 1.5rem;
+            
+            /* Efek Vignette Futuristik */
+            position: relative;
         }
 
-        /* Kelas untuk Navigasi Aktif */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(15, 23, 42, 0) 60%, rgba(15, 23, 42, 1) 100%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Navigasi Aktif */
         .nav-active {
             color: #22d3ee; /* text-cyan-400 */
             font-weight: 600;
         }
         
-        /* Animasi Scroll Reveal */
-        [data-reveal] {
+        /* Tombol Gradien Animasi */
+        .btn-gradient {
+            background-size: 200% auto;
+            background-image: linear-gradient(to right, #22d3ee 0%, #06b6d4 50%, #22d3ee 100%);
+            transition: background-position 0.5s ease;
+        }
+        .btn-gradient:hover {
+            background-position: right center;
+        }
+
+        /* Kartu Glow Futuristik */
+        .glow-card {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glow-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(34, 211, 238, 0.15) 0%, rgba(34, 211, 238, 0) 30%);
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
         }
-        
-        .is-revealed {
+        .glow-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.1);
+        }
+        .glow-card:hover::before {
             opacity: 1;
-            transform: translateY(0);
         }
 
-        /* Animasi Spinner */
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #22d3ee; /* border-cyan-400 */
-            border-bottom-color: transparent;
-            border-radius: 50%;
-            display: inline-block;
-            box-sizing: border-box;
-            animation: rotation 1s linear infinite;
-        }
-
-        @keyframes rotation {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        
         /* Styling untuk Modal */
         .modal {
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
         .modal-content {
             transition: transform 0.3s ease;
+            transform: scale(0.95);
         }
         .modal-enter {
             opacity: 0;
@@ -71,14 +91,23 @@
         .modal-enter .modal-content {
             transform: scale(0.9);
         }
-        .modal-leave-to {
-            opacity: 0;
-            visibility: hidden;
-        }
-        .modal-leave-to .modal-content {
-            transform: scale(0.9);
+        
+        /* Animasi Halaman */
+        .page-section {
+            animation: pageFadeIn 0.5s ease-out forwards;
         }
 
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
     </style>
 </head>
 <body class="bg-slate-900 text-slate-300 antialiased">
@@ -89,21 +118,21 @@
             <div class="flex h-16 items-center justify-between">
                 <!-- Logo / Nama -->
                 <div class="flex-shrink-0">
-                    <a href="#beranda" class="text-xl font-bold text-white transition hover:text-cyan-400">
-                        Kuat Riawan
+                    <a href="#" data-page-target="page-beranda" class="text-xl font-bold text-white transition hover:text-cyan-400">
+                        Kuat Riawan.
                     </a>
                 </div>
                 
                 <!-- Navigasi Desktop -->
                 <nav class="hidden md:block">
                     <ul class="flex items-center space-x-6 text-sm font-medium">
-                        <li><a href="#beranda" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-section="beranda">Beranda</a></li>
-                        <li><a href="#tentang" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-section="tentang">Tentang</a></li>
-                        <li><a href="#keterampilan" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-section="keterampilan">Keterampilan</a></li>
-                        <li><a href="#proyek" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-section="proyek">Proyek</a></li>
-                        <li><a href="#ide-proyek" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-section="ide-proyek">Ide Proyek</a></li>
+                        <li><a href="#" class="nav-link nav-active text-slate-300 hover:text-cyan-400 transition" data-page-target="page-beranda">Beranda</a></li>
+                        <li><a href="#" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-page-target="page-tentang">Tentang</a></li>
+                        <li><a href="#" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-page-target="page-visimisi">Visi Misi</a></li>
+                        <li><a href="#" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-page-target="page-kredibilitas">Kredibilitas</a></li>
+                        <li><a href="#" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-page-target="page-proyek">Proyek</a></li>
                         <li>
-                            <a href="#kontak" class="inline-flex items-center justify-center rounded-full bg-cyan-500 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-900">
+                            <a href="#" data-page-target="page-kontak" class="nav-link btn-gradient inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold text-white shadow-lg">
                                 Kontak
                             </a>
                         </li>
@@ -125,411 +154,485 @@
         <!-- Menu Mobile (Dropdown) -->
         <div id="mobile-menu" class="hidden md:hidden">
             <ul class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-                <li><a href="#beranda" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-section="beranda">Beranda</a></li>
-                <li><a href="#tentang" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-section="tentang">Tentang</a></li>
-                <li><a href="#keterampilan" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-section="keterampilan">Keterampilan</a></li>
-                <li><a href="#proyek" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-section="proyek">Proyek</a></li>
-                <li><a href="#ide-proyek" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-section="ide-proyek">Ide Proyek</a></li>
-                <li><a href="#kontak" class="block rounded-md bg-cyan-500 px-3 py-2 text-base font-medium text-white hover:bg-cyan-400">Kontak</a></li>
+                <li><a href="#" class="nav-link nav-active block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-page-target="page-beranda">Beranda</a></li>
+                <li><a href="#" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-page-target="page-tentang">Tentang</a></li>
+                <li><a href="#" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-page-target="page-visimisi">Visi Misi</a></li>
+                <li><a href="#" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-page-target="page-kredibilitas">Kredibilitas</a></li>
+                <li><a href="#" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-page-target="page-proyek">Proyek</a></li>
+                <li><a href="#" class="nav-link block rounded-md bg-cyan-500 px-3 py-2 text-base font-medium text-white hover:bg-cyan-400" data-page-target="page-kontak">Kontak</a></li>
             </ul>
         </div>
     </header>
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <main class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <!-- ===== MAIN CONTENT (Kontainer Halaman) ===== -->
+    <main class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-24 pb-16">
 
-        <!-- ===== LAYER 1: Beranda (Home) ===== -->
-        <section id="beranda" class="min-h-screen flex items-center pt-16" data-section="beranda">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full">
-                <!-- Kolom Teks -->
-                <div data-reveal>
-                    <span class="mb-3 inline-block rounded-full bg-cyan-900/50 px-4 py-1 text-sm font-medium text-cyan-400">
-                        Mahasiswa Sistem Informasi
-                    </span>
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6">
-                        Halo, saya Kuat Riawan.
-                    </h1>
-                    <p class="text-lg text-slate-400 max-w-lg mb-8">
-                        Mahasiswa Universitas Terbuka dari Program Studi Sistem Informasi. Saat ini saya bekerja sebagai Training Coordinator di PT Upaya Riksa Patra, perusahaan yang bergerak di bidang PJK3.
-                    </p>
-                    <a href="#tentang" class="inline-flex items-center rounded-full bg-cyan-500 px-7 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-900">
-                        Kenal Lebih Jauh
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zmM9.293 8.293a1 1 0 011.414 0l2 2a1 1 0 010 1.414l-2 2a1 1 0 01-1.414-1.414L10.586 11 9.293 9.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                </div>
-                
-                <!-- Kolom Gambar -->
-                <div class="flex items-center justify-center" data-reveal>
-                    <div class="relative w-80 h-80 sm:w-96 sm:h-96">
-                        <!-- Latar belakang lingkaran gradien -->
-                        <div class="absolute inset-0 bg-gradient-to-br from-cyan-600 to-blue-800 rounded-full blur-2xl opacity-50"></div>
-                        <!-- Gambar (GANTI SRC INI) -->
-                        <img src="https://i.ibb.co.com/vxWj3nTS/IMG-3679-2.jpg" 
-                             alt="Foto profil Kuat Riawan"
-                             class="relative w-full h-full rounded-full object-cover shadow-2xl border-4 border-slate-800">
+        <!-- ===== HALAMAN 1: BERANDA (HOME) ===== -->
+        <section id="page-beranda" class="page-section">
+            <div class="min-h-[calc(100vh-10rem)] flex items-center">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full">
+                    <!-- Kolom Teks -->
+                    <div>
+                        <span class="mb-3 inline-block rounded-full bg-cyan-900/50 px-4 py-1 text-sm font-medium text-cyan-400">
+                            Mahasiswa Sistem Informasi
+                        </span>
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6">
+                            Halo, saya Kuat Riawan.
+                        </h1>
+                        <p class="text-lg text-slate-400 max-w-lg mb-8">
+                            Seorang pembelajar yang antusias, fokus pada bagaimana teknologi dan data dapat memecahkan masalah bisnis yang kompleks dan meningkatkan efisiensi.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="#" data-page-target="page-proyek" class="btn-gradient inline-flex items-center justify-center rounded-full px-7 py-3 text-sm font-semibold text-white shadow-lg">
+                                Lihat Proyek Saya
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zmM9.293 8.293a1 1 0 011.414 0l2 2a1 1 0 010 1.414l-2 2a1 1 0 01-1.414-1.414L10.586 11 9.293 9.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                            <a href="#" data-page-target="page-tentang" class="inline-flex items-center justify-center rounded-full bg-slate-800 px-7 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-slate-700">
+                                Tentang Saya
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Kolom Gambar -->
+                    <div class="flex items-center justify-center">
+                        <div class="relative w-80 h-80 sm:w-96 sm:h-96">
+                            <!-- Latar belakang lingkaran gradien -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-cyan-600 to-blue-800 rounded-full blur-2xl opacity-50"></div>
+                            <!-- Gambar (GANTI SRC INI) -->
+                            <img src="https://placehold.co/400x400/0f172a/94a3b8?text=Ganti+Foto+Profil" 
+                                 alt="Foto profil Kuat Riawan"
+                                 class="relative w-full h-full rounded-full object-cover shadow-2xl border-4 border-slate-800">
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ===== LAYER 2: Tentang Saya ===== -->
-        <section id="tentang" class="py-24 sm:py-32" data-section="tentang">
-            <div class="mx-auto max-w-7xl">
-                <!-- Judul Section -->
-                <div class="text-center mb-16" data-reveal>
-                    <h2 class="text-base font-semibold leading-7 text-cyan-400">Tentang Saya</h2>
-                    <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white">
-                        Perjalanan Saya di Dunia Teknologi
-                    </p>
+        <!-- ===== HALAMAN 2: TENTANG (CV) ===== -->
+        <section id="page-tentang" class="page-section hidden">
+            <!-- Judul Halaman -->
+            <div class="text-center mb-16">
+                <h2 class="text-base font-semibold leading-7 text-cyan-400">Tentang Saya</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                    Ringkasan Profesional
+                </p>
+            </div>
+            
+            <!-- Grid Layout CV -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <!-- Kolom Kiri: Info & Keterampilan -->
+                <div class="lg:col-span-1 space-y-12">
+                    
+                    <!-- Box Info Kontak & CV -->
+                    <div class="bg-slate-800/50 p-6 rounded-2xl shadow-lg border border-slate-700/50">
+                        <h3 class="text-2xl font-bold text-white mb-6 text-center">Info & Keterampilan</h3>
+                        
+                        <!-- Tombol Unduh CV -->
+                        <a href="https... (GANTI DENGAN LINK PDF CV KAMU)" target="_blank" rel="noopener noreferrer" class="btn-gradient group mb-6 flex w-full items-center justify-center gap-x-3 rounded-full px-6 py-3 text-sm font-semibold text-white shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:-translate-y-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                            Unduh CV (PDF)
+                        </a>
+
+                        <!-- Keterampilan CV (Kartu) -->
+                        <h4 class="text-lg font-semibold text-cyan-400 mb-4">Keterampilan CV</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Kartu 1 (LOGO DIGANTI - MS Office) -->
+                            <div class_alias="skill-card" data-skill-id="cv1" class="glow-card bg-slate-800 p-4 rounded-xl shadow-lg cursor-pointer flex flex-col items-center text-center">
+                                <svg class="w-10 h-10 text-cyan-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625a3.375 3.375 0 0 0-3.375 3.375v11.25a3.375 3.375 0 0 0 3.375 3.375h12.75a3.375 3.375 0 0 0 3.375-3.375V11.25a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5" /></svg>
+                                <h5 class="text-sm font-semibold text-white">Microsoft Office</h5>
+                            </div>
+                            <!-- Kartu 2 (LOGO DIGANTI - Public Speaking) -->
+                            <div class_alias="skill-card" data-skill-id="cv2" class="glow-card bg-slate-800 p-4 rounded-xl shadow-lg cursor-pointer flex flex-col items-center text-center">
+                                <svg class="w-10 h-10 text-cyan-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" /></svg>
+                                <h5 class="text-sm font-semibold text-white">Public Speaking</h5>
+                            </div>
+                            <!-- Kartu 3 (Logo Analisis/Diagram) -->
+                            <div class_alias="skill-card" data-skill-id="cv3" class="glow-card bg-slate-800 p-4 rounded-xl shadow-lg cursor-pointer flex flex-col items-center text-center">
+                                <svg class="w-10 h-10 text-cyan-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v16.5h16.5M20.25 12.75V3M15 12.75V3m-4.5 9.75V3m-4.5 9.75V3" /></svg>
+                                <h5 class="text-sm font-semibold text-white">Analisis Kritis</h5>
+                            </div>
+                            <!-- Kartu 4 (Logo Manajemen Waktu/List) -->
+                            <div class_alias="skill-card" data-skill-id="cv4" class="glow-card bg-slate-800 p-4 rounded-xl shadow-lg cursor-pointer flex flex-col items-center text-center">
+                                <svg class="w-10 h-10 text-cyan-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 12h9.75m-9.75 6h9.75M3.75 6H7.5m-3.75 6H7.5m-3.75 6H7.5" /></svg>
+                                <h5 class="text-sm font-semibold text-white">Manajemen Waktu</h5>
+                            </div>
+                            <!-- Kartu 5 (LOGO DIGANTI - Kerja Tim) -->
+                            <div class_alias="skill-card" data-skill-id="cv5" class="glow-card bg-slate-800 p-4 rounded-xl shadow-lg cursor-pointer flex flex-col items-center text-center">
+                                <svg class="w-10 h-10 text-cyan-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg>
+                                <h5 class="text-sm font-semibold text-white">Kerja Tim</h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Keterampilan Teknis (Kartu) -->
+                    <div class="bg-slate-800/50 p-6 rounded-2xl shadow-lg border border-slate-700/50">
+                        <h4 class="text-lg font-semibold text-cyan-400 mb-4 text-center">Keterampilan Teknis</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Kartu Teknis 1 (LOGO DIGANTI - Analisis Proses Bisnis) -->
+                            <div class_alias="skill-card" data-skill-id="tech1" class="glow-card bg-slate-800 p-4 rounded-xl shadow-lg cursor-pointer flex flex-col items-center text-center">
+                                <svg class="w-10 h-10 text-cyan-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m1-3 1 3m0 0-1 3m1-3 1 3m0 0h-7.5m7.5 0h3.75M12 16.5v3.75m0-3.75L10.5 18m1.5-1.5L13.5 18m0 0v3.75m0-3.75c0-1.036.84-1.875 1.875-1.875h.375c1.036 0 1.875.84 1.875 1.875m-4.125 0c0-1.036.84-1.875 1.875-1.875h.375c1.036 0 1.875.84 1.875 1.875M3 16.5v3.75c0 1.036.84 1.875 1.875-1.875h.375c1.036 0 1.875-.84 1.875-1.875V16.5M16.5 16.5v3.75c0 1.036.84 1.875 1.875-1.875h.375c1.036 0 1.875-.84 1.875-1.875V16.5" /></svg>
+                                <h5 class="text-sm font-semibold text-white">Analisis Proses Bisnis</h5>
+                            </div>
+                            <!-- Kartu Teknis 2 -->
+                            <div class_alias="skill-card" data-skill-id="tech2" class="glow-card bg-slate-800 p-4 rounded-xl shadow-lg cursor-pointer flex flex-col items-center text-center">
+                                <svg class="w-10 h-10 text-cyan-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375" /></svg>
+                                <h5 class="text-sm font-semibold text-white">Basis Data (SQL)</h5>
+                            </div>
+                            <!-- Kartu Teknis 3 -->
+                            <div class_alias="skill-card" data-skill-id="tech3" class="glow-card bg-slate-800 p-4 rounded-xl shadow-lg cursor-pointer flex flex-col items-center text-center">
+                                <svg class="w-10 h-10 text-cyan-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5 0-4.5 16.5" /></svg>
+                                <h5 class="text-sm font-semibold text-white">HTML, CSS, JS</h5>
+                            </div>
+                            <!-- Kartu Teknis 4 -->
+                            <div class_alias="skill-card" data-skill-id="tech4" class="glow-card bg-slate-800 p-4 rounded-xl shadow-lg cursor-pointer flex flex-col items-center text-center">
+                                <svg class="w-10 h-10 text-cyan-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.115 5.19.31 9.25a.75.75 0 0 0 0 1.5l5.805 4.06a.75.75 0 0 0 .93.04L12 11.25l4.955 3.55a.75.75 0 0 0 .93-.04l5.805-4.06a.75.75 0 0 0 0-1.5L17.885 5.19a.75.75 0 0 0-.93.04L12 8.75l-4.955-3.52a.75.75 0 0 0-.93-.04Z" /></svg>
+                                <h5 class="text-sm font-semibold text-white">Tailwind CSS</h5>
+                            </div>
+                            <!-- Kartu Teknis 5 (Ganti API) -->
+                            <div class_alias="skill-card" data-skill-id="tech5" class="glow-card bg-slate-800 p-4 rounded-xl shadow-lg cursor-pointer flex flex-col items-center text-center">
+                                <svg class="w-10 h-10 text-cyan-400 mb-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.9,2C6.4,2,2,6.4,2,11.9c0,5.5,4.5,10,10,10s10-4.5,10-10C21.9,6.4,17.5,2,11.9,2z M11.9,20.1 c-4.5,0-8.2-3.7-8.2-8.2s3.7-8.2,8.2-8.2s8.2,3.7,8.2,8.2S16.4,20.1,11.9,20.1z M10.1,11.9c0-1,0.8-1.8,1.8-1.8s1.8,0.8,1.8,1.8 c0,1-0.8,1.8-1.8,1.8S10.1,12.9,10.1,11.9z M10.1,6.6h3.6v3.6h-3.6V6.6z M10.1,15.3h3.6v3.6h-3.6V15.3z M6.6,10.1h3.6v3.6 H6.6V10.1z M15.3,10.1h3.6v3.6h-3.6V10.1z"></path></svg>
+                                <h5 class="text-sm font-semibold text-white">Desain UI/UX (Figma)</h5>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 
-                <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-                    <!-- Timeline (Menggantikan Gambar) -->
-                    <div class="flex-1 w-full max-w-md mx-auto" data-reveal>
+                <!-- Kolom Kanan: Ringkasan & Timeline -->
+                <div class="lg:col-span-2 space-y-12">
+                    
+                    <!-- Box Ringkasan Profesional -->
+                    <div class="bg-slate-800/50 p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-700/50">
+                        <p class="text-lg text-slate-400 mb-4">
+                            <!-- (GANTI DENGAN RINGKASAN ANDA) -->
+                            Sebagai mahasiswa Sistem Informasi yang juga bekerja sebagai Koordinator Pelatihan, saya memiliki pemahaman unik tentang bagaimana teknologi dapat menjembatani kesenjangan pengetahuan dan meningkatkan efisiensi operasional.
+                        </p>
+                        <p class="text-lg text-slate-400">
+                            <!-- (GANTI DENGAN RINGKASAN ANDA) -->
+                            Saya termotivasi untuk merancang dan mengimplementasikan sistem yang intuitif, berorientasi pada data, dan memberikan solusi nyata bagi masalah bisnis. Saya senang mengurai proses yang kompleks dan membuatnya sederhana melalui teknologi.
+                        </p>
+                    </div>
+
+                    <!-- Box Timeline Pendidikan & Pengalaman -->
+                    <div class="bg-slate-800/50 p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-700/50">
+                        <h3 class="text-2xl font-bold text-white mb-8">Pendidikan & Pengalaman</h3>
+                        
                         <ol class="relative border-l border-slate-700 ml-4">                  
+                            <!-- Item 1 (GANTI) -->
                             <li class="mb-10 ml-6">            
-                                <span class="absolute flex items-center justify-center w-8 h-8 bg-cyan-900 rounded-full -left-4 ring-8 ring-slate-800">
-                                    <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                                <span class="absolute flex items-center justify-center w-8 h-8 bg-cyan-900 rounded-full -left-4 ring-8 ring-slate-800/50">
+                                    <svg class="w-4 h-4 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3.5a1 1 0 00.788 1.84L10 9.75l6.606-2.25a1 1 0 00.788-1.84l-7-3.5zM3 14.25a1 1 0 001 1h12a1 1 0 100-2H4a1 1 0 00-1 1z" /></svg>
                                 </span>
-                                <h3 class="flex items-center mb-1 text-xl font-semibold text-white">2023 - Awal Perjalanan</h3>
-                                <time class="block mb-2 text-sm font-normal leading-none text-slate-500">Memulai Studi</time>
-                                <p class="text-base font-normal text-slate-400">Memulai studi S1 Sistem Informasi di Universitas Terbuka, membangun fondasi di bidang teknologi dan manajemen.</p>
+                                <h3 class="flex items-center mb-1 text-xl font-semibold text-white">Mahasiswa Sistem Informasi</h3>
+                                <time class="block mb-2 text-sm font-normal leading-none text-slate-500">2023 - Sekarang | Universitas Terbuka</time>
+                                <p class="text-base font-normal text-slate-400">Membangun fondasi kuat di bidang analisis proses bisnis, manajemen basis data, dan pengembangan sistem.</p>
                             </li>
+                            <!-- Item 2 (GANTI) -->
                             <li class="mb-10 ml-6">
-                                <span class="absolute flex items-center justify-center w-8 h-8 bg-cyan-900 rounded-full -left-4 ring-8 ring-slate-800">
-                                    <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                                <span class="absolute flex items-center justify-center w-8 h-8 bg-cyan-900 rounded-full -left-4 ring-8 ring-slate-800/50">
+                                    <svg class="w-4 h-4 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.5l-2.75 1.1a.5.5 0 00-.25.44V19a1 1 0 01-1 1H7a1 1 0 01-1-1v-5.96a.5.5 0 00-.25-.44L3 11.5V8a2 2 0 012-2h1zM8 8H6v3.5a.5.5 0 00.25.44L8 12.44V8zm4 0h-2v4.44l1.75.7a.5.5 0 00.25-.44V8z" clip-rule="evenodd" /></svg>
                                 </span>
-                                <h3 class="mb-1 text-xl font-semibold text-white">2024 - Pengembangan Keterampilan</h3>
-                                <time class="block mb-2 text-sm font-normal leading-none text-slate-500">Eksplorasi Web & Data</time>
-                                <p class="text-base font-normal text-slate-400">Menyelesaikan proyek analisis data dan mulai mendalami pengembangan web (HTML, CSS, JavaScript) secara otodidak.</p>
+                                <h3 class="mb-1 text-xl font-semibold text-white">Training Coordinator</h3>
+                                <time class="block mb-2 text-sm font-normal leading-none text-slate-500">2022 - Sekarang | PT Upaya Riksa Patra</time>
+                                <p class="text-base font-normal text-slate-400">Mengelola logistik, administrasi, dan data untuk program pelatihan K3, mengidentifikasi kebutuhan untuk digitalisasi proses.</p>
                             </li>
+                            <!-- Item 3 (GANTI/TAMBAH) -->
                             <li class="ml-6">
-                                <span class="absolute flex items-center justify-center w-8 h-8 bg-cyan-900 rounded-full -left-4 ring-8 ring-slate-800">
-                                    <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                                <span class="absolute flex items-center justify-center w-8 h-8 bg-cyan-900 rounded-full -left-4 ring-8 ring-slate-800/50">
+                                    <svg class="w-4 h-4 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" /></svg>
                                 </span>
-                                <h3 class="mb-1 text-xl font-semibold text-white">2025 - Teknologi Modern</h3>
-                                <time class="block mb-2 text-sm font-normal leading-none text-slate-500">API & Framework</time>
-                                <p class="text-base font-normal text-slate-400">Mulai bereksperimen dengan API (Gemini) dan framework modern (Tailwind CSS) untuk membangun aplikasi yang lebih interaktif.</p>
-                            </li>
+                                <h3 class="mb-1 text-xl font-semibold text-white">Sertifikasi... (Contoh)</h3>
+                                <time class="block mb-2 text-sm font-normal leading-none text-slate-500">Tahun | Lembaga</time>
+                                <p class="text-base font-normal text-slate-400">Deskripsi singkat sertifikasi atau pelatihan yang relevan.</p>
+</li>
                         </ol>
                     </div>
 
-                    <!-- Teks Deskripsi -->
-                    <div class="flex-1" data-reveal>
-                        <p class="text-lg text-slate-400 mb-6">
-                            Sebagai mahasiswa Sistem Informasi dan juga Training Coordinator di perusahaan PJK3, saya banyak belajar bagaimana teknologi bisa membantu meningkatkan efisiensi kerja dan pengelolaan data. Bagi saya, memahami proses bisnis dan menghubungkannya dengan sistem digital adalah langkah penting untuk menciptakan solusi yang berdampak nyata di dunia kerja.
-                        </p>
-                        <p class="text-lg text-slate-400 mb-6">
-                            Saya tertarik mengembangkan sistem yang sederhana tapi fungsional, terutama yang bisa membantu otomatisasi tugas administrasi dan pelatihan. Saat ini, saya aktif memperdalam pengembangan web, analisis data, serta eksplorasi API dan framework modern untuk membangun sistem berbasis data yang lebih terintegrasi dan mudah digunakan.
-                        </p>
-                        <ul class="space-y-4">
-                            <li class="flex items-center">
-                                <svg class="w-6 h-6 text-cyan-400 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                <span class="text-slate-300">Terbiasa berpikir analitis dan menyelesaikan masalah dengan pendekatan praktis</span>
-                            </li>
-                            <li class="flex items-center">
-                                <svg class="w-6 h-6 text-cyan-400 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                <span class="text-slate-300">Belajar secara mandiri dan terus mencari cara baru untuk meningkatkan kemampuan</span>
-                            </li>
-                            <li class="flex items-center">
-                                <svg class="w-6 h-6 text-cyan-400 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                <span class="text-slate-300">Berfokus pada efisiensi kerja dan penerapan teknologi dalam pengembangan SDM</span>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- ===== LAYER 3: Keterampilan ===== -->
-        <section id="keterampilan" class="py-24 sm:py-32" data-section="keterampilan">
-            <div class="mx-auto max-w-7xl">
-                <!-- Judul Section -->
-                <div class="text-center mb-16" data-reveal>
-                    <h2 class="text-base font-semibold leading-7 text-cyan-400">Keterampilan</h2>
-                    <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white">
-                        Teknologi yang Saya Kuasai
+        <!-- ===== HALAMAN 3: VISI MISI ===== -->
+        <section id="page-visimisi" class="page-section hidden">
+            <!-- Judul Halaman -->
+            <div class="text-center mb-16">
+                <h2 class="text-base font-semibold leading-7 text-cyan-400">Filosofi Saya</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                    Visi & Misi Profesional
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <!-- Kartu Visi -->
+                <div class="glow-card bg-slate-800/50 p-8 rounded-2xl shadow-lg border border-slate-700/50 flex flex-col items-center text-center">
+                    <div class="flex-shrink-0 mb-4">
+                        <svg class="w-16 h-16 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.473-8.748c.206-.403.628-.622 1.074-.622H16.42a1.012 1.012 0 0 1 1.074.622l4.473 8.748a1.012 1.012 0 0 1 0 .639l-4.473 8.748a1.012 1.012 0 0 1-1.074.622H7.584a1.012 1.012 0 0 1-1.074-.622L2.036 12.322Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Visi Saya</h3>
+                    <p class="text-slate-400">
+                        <!-- (GANTI DENGAN VISI ANDA) -->
+                        "Menjadi seorang profesional Sistem Informasi yang mampu menciptakan solusi teknologi yang efisien, mudah diakses, dan memberikan dampak nyata dalam menyederhanakan proses bisnis yang kompleks."
                     </p>
                 </div>
                 
-                <!-- Grid Keterampilan -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    
-                    <!-- Keterampilan 1: Analisis Proses Bisnis -->
-                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
-                         data-reveal 
-                         data-skill-id="1">
-                        <div class="flex-shrink-0 mb-4">
-                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25A2.25 2.25 0 0 1 5.25 3h13.5A2.25 2.25 0 0 1 21 5.25Z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-white mb-2">Analisis Sistem & Proses Bisnis</h3>
-                        <p class="text-slate-400 text-sm">Menganalisis kebutuhan organisasi dan memetakan alur proses bisnis agar sistem yang dibangun sesuai tujuan dan efisien.</p>
+                <!-- Kartu Misi (LOGO DIGANTI - Misi) -->
+                <div class="glow-card bg-slate-800/50 p-8 rounded-2xl shadow-lg border border-slate-700/50 flex flex-col items-center text-center">
+                    <div class="flex-shrink-0 mb-4">
+                        <svg class="w-16 h-16 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" /></svg>
                     </div>
-
-                    <!-- Keterampilan 2: Basis Data (SQL) -->
-                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
-                         data-reveal 
-                         data-skill-id="2">
-                        <div class="flex-shrink-0 mb-4">
-                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-white mb-2">Basis Data & Manajemen Informasi</h3>
-                        <p class="text-slate-400 text-sm">Merancang dan mengelola basis data untuk menyimpan, mengolah, dan mengamankan informasi organisasi.</p>
-                    </div>
-
-                    <!-- Keterampilan 3: Visualisasi Data -->
-                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
-                         data-reveal 
-                         data-skill-id="3">
-                        <div class="flex-shrink-0 mb-4">
-                           <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h12A2.25 2.25 0 0 0 20.25 14.25V3M3.75 21h16.5M16.5 3.75h.008v.008H16.5V3.75Z" />
-                           </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-white mb-2">Pengembangan Aplikasi & Web Sistem</h3>
-                        <p class="text-slate-400 text-sm">Membangun aplikasi berbasis web untuk mendukung kegiatan bisnis dan administrasi organisasi.</p>
-                    </div>
-
-                    <!-- Keterampilan 4: Manajemen Proyek (SI) -->
-                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
-                         data-reveal 
-                         data-skill-id="4">
-                        <div class="flex-shrink-0 mb-4">
-                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75c0-.231-.035-.454-.1-.664M6.75 7.5H18a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 18.75V9.75A2.25 2.25 0 0 1 6.75 7.5Z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-white mb-2">Analisis Data & Pelaporan</h3>
-                        <p class="text-slate-400 text-sm">Mengolah data mentah menjadi informasi yang berguna untuk pengambilan keputusan manajerial.</p>
-                    </div>
-
-                    <!-- Keterampilan 5: HTML, CSS, JS -->
-                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
-                         data-reveal 
-                         data-skill-id="5">
-                        <div class="flex-shrink-0 mb-4">
-                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5 0-4.5 16.5" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-white mb-2">HTML, CSS, JS</h3>
-                        <p class="text-slate-400 text-sm">Fondasi utama pengembangan antarmuka (frontend) web.</p>
-                    </div>
-                    
-                    <!-- Keterampilan 6: Tailwind CSS -->
-                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
-                         data-reveal 
-                         data-skill-id="6">
-                        <div class="flex-shrink-0 mb-4">
-                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M6.115 5.19.31 9.25a.75.75 0 0 0 0 1.5l5.805 4.06a.75.75 0 0 0 .93.04L12 11.25l4.955 3.55a.75.75 0 0 0 .93-.04l5.805-4.06a.75.75 0 0 0 0-1.5L17.885 5.19a.75.75 0 0 0-.93.04L12 8.75l-4.955-3.52a.75.75 0 0 0-.93-.04Z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-white mb-2">Tailwind CSS</h3>
-                        <p class="text-slate-400 text-sm">Framework CSS modern untuk membangun desain UI dengan cepat.</p>
-                    </div>
-
-                    <!-- Keterampilan 7: API Integration -->
-                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
-                         data-reveal 
-                         data-skill-id="7">
-                        <div class="flex-shrink-0 mb-4">
-                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-white mb-2">Integrasi API</h3>
-                        <p class="text-slate-400 text-sm">Menghubungkan aplikasi ke layanan eksternal (REST, Gemini API).</p>
-                    </div>
-                    
-                    <!-- Keterampilan 8: Algoritma & Pemrograman -->
-                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
-                         data-reveal 
-                         data-skill-id="8">
-                        <div class="flex-shrink-0 mb-4">
-                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="m6.75 7.5 3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25Z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-white mb-2">Algoritma & Pemrograman</h3>
-                        <p class="text-slate-400 text-sm">Dasar logika pemecahan masalah (Python, JavaScript).</p>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-        
-        <!-- ===== LAYER 4: Proyek ===== -->
-        <section id="proyek" class="py-24 sm:py-32" data-section="proyek">
-            <div class="mx-auto max-w-7xl">
-                <!-- Judul Section -->
-                <div class="text-center mb-16" data-reveal>
-                    <h2 class="text-base font-semibold leading-7 text-cyan-400">Portofolio</h2>
-                    <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white">
-                        Proyek yang Pernah Saya Kerjakan
+                    <h3 class="text-2xl font-bold text-white mb-3">Misi Saya</h3>
+                    <p class="text-slate-400">
+                        <!-- (GANTI DENGAN MISI ANDA) -->
+                        "Terus belajar dan beradaptasi dengan teknologi baru. Menganalisis kebutuhan pengguna dengan empati. Merancang sistem yang fungsional dan intuitif. Berkolaborasi secara efektif untuk menghadirkan solusi terbaik."
                     </p>
                 </div>
-                
-                <!-- Grid Proyek -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    
-                    <!-- Proyek 1: Web Design (SUDAH DIGANTI) -->
-                    <div class="bg-slate-800 rounded-xl shadow-lg overflow-hidden flex flex-col" data-reveal>
-                        <img class="h-48 w-full object-cover" src="https://inca.ac.id/wp-content/uploads/2024/11/Web-Design.jpg" alt="Web Design">
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-semibold text-white mb-2">Desain Web (Studi Kasus)</h3>
-                            <p class="text-slate-400 text-sm mb-4 flex-grow">
-                                Desain UI/UX dan prototipe untuk studi kasus klien fiktif, fokus pada alur pengguna (user flow) dan estetika.
-                            </p>
-                            <button class="project-card mt-4 inline-flex items-center justify-center rounded-md bg-slate-700 px-4 py-2 text-sm font-medium text-cyan-400 transition hover:bg-slate-600 focus:outline-none"
-                                    data-project-id="1">
-                                Lihat Detail
-                            </button>
-                        </div>
-                    </div>
+            </div>
+        </section>
 
-                    <!-- Proyek 2: Analisis Data Penjualan -->
-                    <div class="bg-slate-800 rounded-xl shadow-lg overflow-hidden flex flex-col" data-reveal>
-                        <img class="h-48 w-full object-cover" src="https://ap-southeast-2-seek-apac.graphassets.com/AEzBCRO50TYyqbV6XzRDQz/GX1S6WQETYfXDNTaipg2" alt="Analisis Data Penjualan">
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-semibold text-white mb-2">Analisis Data Penjualan</h3>
-                            <p class="text-slate-400 text-sm mb-4 flex-grow">
-                                Proyek akademik untuk menganalisis data penjualan fiktif, menemukan tren, dan memvisualisasikan insight menggunakan Tableau.
-                            </p>
-                            <button class="project-card mt-4 inline-flex items-center justify-center rounded-md bg-slate-700 px-4 py-2 text-sm font-medium text-cyan-400 transition hover:bg-slate-600 focus:outline-none"
-                                    data-project-id="2">
-                                Lihat Detail
-                            </button>
+        <!-- ===== HALAMAN 4: KREDIBILITAS (Testimoni & Galeri) ===== -->
+        <section id="page-kredibilitas" class="page-section hidden">
+            <!-- Judul Halaman -->
+            <div class="text-center mb-16">
+                <h2 class="text-base font-semibold leading-7 text-cyan-400">Kredibilitas</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                    Testimoni & Aktivitas Kerja
+                </p>
+            </div>
+            
+            <!-- Bagian Testimoni -->
+            <div class="mb-20">
+                <h3 class="text-2xl font-bold text-white mb-8 text-center">Testimoni Pelayanan</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Testimoni 1 (GANTI) -->
+                    <div class="glow-card bg-slate-800/50 p-6 rounded-2xl shadow-lg border border-slate-700/50">
+                        <div class="flex items-center mb-4">
+                            <img class="h-12 w-12 rounded-full object-cover mr-4" src="https://placehold.co/100x100/334155/e2e8f0?text=A" alt="Foto">
+                            <div>
+                                <h4 class="font-semibold text-white">Nama Klien/Rekan</h4>
+                                <p class="text-sm text-slate-400">Posisi/Perusahaan</p>
+                            </div>
                         </div>
+                        <p class="text-slate-400 italic">"Kuat sangat membantu dalam mengkoordinasi pelatihan. Datanya selalu rapi dan sangat responsif terhadap kebutuhan kami..."</p>
                     </div>
-
-                    <!-- Proyek 3: Desain Sistem E-commerce -->
-                    <div class="bg-slate-800 rounded-xl shadow-lg overflow-hidden flex flex-col" data-reveal>
-                        <img class="h-48 w-full object-cover" src="https://koinworks.com/wp-content/uploads/2017/10/platform-ecommerce-bisnis-online-toko-online.jpg" alt="Desain Sistem E-commerce">
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-semibold text-white mb-2">Desain Sistem E-commerce</h3>
-                            <p class="text-slate-400 text-sm mb-4 flex-grow">
-                                Merancang alur proses bisnis, DFD, dan ERD untuk sistem e-commerce sederhana sebagai tugas mata kuliah Analisis & Perancangan Sistem.
-                            </p>
-                            <button class="project-card mt-4 inline-flex items-center justify-center rounded-md bg-slate-700 px-4 py-2 text-sm font-medium text-cyan-400 transition hover:bg-slate-600 focus:outline-none"
-                                    data-project-id="3">
-                                Lihat Detail
-                            </button>
+                    <!-- Testimoni 2 (GANTI) -->
+                    <div class="glow-card bg-slate-800/50 p-6 rounded-2xl shadow-lg border border-slate-700/50">
+                        <div class="flex items-center mb-4">
+                            <img class="h-12 w-12 rounded-full object-cover mr-4" src="https://placehold.co/100x100/334155/e2e8f0?text=B" alt="Foto">
+                            <div>
+                                <h4 class="font-semibold text-white">Nama Klien/Rekan</h4>
+                                <p class="text-sm text-slate-400">Posisi/Perusahaan</p>
+                            </div>
                         </div>
+                        <p class="text-slate-400 italic">"Proses administrasi yang dikelola oleh Kuat berjalan sangat lancar. Sangat profesional dan terorganisir..."</p>
                     </div>
-
+                    <!-- Testimoni 3 (GANTI) -->
+                    <div class="glow-card bg-slate-800/50 p-6 rounded-2xl shadow-lg border border-slate-700/50">
+                        <div class="flex items-center mb-4">
+                            <img class="h-12 w-12 rounded-full object-cover mr-4" src="https://placehold.co/100x100/334155/e2e8f0?text=C" alt="Foto">
+                            <div>
+                                <h4 class="font-semibold text-white">Nama Klien/Rekan</h4>
+                                <p class="text-sm text-slate-400">Posisi/Perusahaan</p>
+                            </div>
+                        </div>
+                        <p class="text-slate-400 italic">"Sangat menghargai inisiatifnya dalam mencoba merapikan data kami. Memiliki pemikiran analitis yang baik..."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bagian Galeri -->
+            <div>
+                <h3 class="text-2xl font-bold text-white mb-8 text-center">Galeri Aktivitas Kerja (PT URP)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Foto Galeri 1 (GANTI) -->
+                    <div class="glow-card bg-slate-800/50 p-4 rounded-2xl shadow-lg border border-slate-700/50">
+                        <img src="https://placehold.co/600x400/1e293b/94a3b8?text=Kegiatan+1" alt="Dokumentasi kegiatan 1" class="rounded-lg w-full h-48 object-cover mb-3">
+                        <p class="text-sm text-slate-400 text-center">Koordinasi Pelatihan K3 (Contoh)</p>
+                    </div>
+                    <!-- Foto Galeri 2 (GANTI) -->
+                    <div class="glow-card bg-slate-800/50 p-4 rounded-2xl shadow-lg border border-slate-700/50">
+                        <img src="https://placehold.co/600x400/1e293b/94a3b8?text=Kegiatan+2" alt="Dokumentasi kegiatan 2" class="rounded-lg w-full h-48 object-cover mb-3">
+                        <p class="text-sm text-slate-400 text-center">Sesi Briefing Pagi (Contoh)</p>
+                    </div>
+                    <!-- Foto Galeri 3 (GANTI) -->
+                    <div class="glow-card bg-slate-800/50 p-4 rounded-2xl shadow-lg border border-slate-700/50">
+                        <img src="https://placehold.co/600x400/1e293b/94a3b8?text=Kegiatan+3" alt="Dokumentasi kegiatan 3" class="rounded-lg w-full h-48 object-cover mb-3">
+                        <p class="text-sm text-slate-400 text-center">Rekapitulasi Data Peserta (Contoh)</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- ===== LAYER 5: Generator Ide Proyek (Fitur AI) ===== -->
-        <section id="ide-proyek" class="py-24 sm:py-32" data-section="ide-proyek">
-            <div class="mx-auto max-w-3xl text-center" data-reveal>
-                <h2 class="text-base font-semibold leading-7 text-cyan-400">Fitur AI (Gemini)</h2>
-                <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white mb-6">
-                    Generator Ide Proyek
+        <!-- ===== HALAMAN 5: PROYEK ===== -->
+        <section id="page-proyek" class="page-section hidden">
+            <!-- Judul Halaman -->
+            <div class="text-center mb-16">
+                <h2 class="text-base font-semibold leading-7 text-cyan-400">Portofolio</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                    Proyek & Studi Kasus
                 </p>
-                <p class="text-lg text-slate-400 mb-8">
-                    Butuh inspirasi? Masukkan satu kata kunci (cth: "Data", "Bisnis", "Web"), dan AI akan memberi Anda ide proyek sederhana yang relevan dengan Sistem Informasi.
-                </p>
+            </div>
+            
+            <!-- Grid Proyek -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 
-                <div class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto mb-6">
-                    <input type="text" id="project-idea-input" class="flex-grow rounded-md border-slate-700 bg-slate-800 px-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500" placeholder="Ketik kategori (cth: 'Web')">
-                    <button id="generate-idea-button" class="inline-flex items-center justify-center rounded-full bg-cyan-500 px-7 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-900">
-                        <span id="idea-button-text">Buat Ide</span>
-                        <span id="idea-spinner" class="hidden spinner"></span>
-                    </button>
+                <!-- Proyek 1 (GANTI) -->
+                <div class="project-card glow-card bg-slate-800/50 rounded-2xl shadow-lg overflow-hidden flex flex-col cursor-pointer border border-slate-700/50" data-project-id="1">
+                    <img class="h-48 w-full object-cover" src="https://placehold.co/600x400/1e293b/94a3b8?text=Web+Design" alt="Web Design">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-semibold text-white mb-2">Desain Web (Studi Kasus)</h3>
+                        <p class="text-slate-400 text-sm mb-4 flex-grow">
+                            Desain UI/UX dan prototipe untuk studi kasus klien fiktif, fokus pada alur pengguna (user flow) dan estetika.
+                        </p>
+                        <span class="mt-4 inline-flex items-center justify-center rounded-full bg-slate-700 px-4 py-2 text-sm font-medium text-cyan-400 transition hover:bg-slate-600">
+                            Lihat Detail
+                        </span>
+                    </div>
                 </div>
-                
-                <div id="project-idea-output" class="min-h-[100px] rounded-lg bg-slate-800 p-6 text-left text-slate-400 shadow-inner hidden">
-                    <!-- Hasil AI akan muncul di sini -->
+
+                <!-- Proyek 2 (GANTI) -->
+                <div class="project-card glow-card bg-slate-800/50 rounded-2xl shadow-lg overflow-hidden flex flex-col cursor-pointer border border-slate-700/50" data-project-id="2">
+                    <img class="h-48 w-full object-cover" src="https://placehold.co/600x400/1e293b/94a3b8?text=Dashboard+Data" alt="Analisis Data Penjualan">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-semibold text-white mb-2">Analisis Data Penjualan</h3>
+                        <p class="text-slate-400 text-sm mb-4 flex-grow">
+                            Proyek akademik untuk menganalisis data penjualan, menemukan tren, dan memvisualisasikan insight menggunakan Tableau.
+                        </p>
+                        <span class="mt-4 inline-flex items-center justify-center rounded-full bg-slate-700 px-4 py-2 text-sm font-medium text-cyan-400 transition hover:bg-slate-600">
+                            Lihat Detail
+                        </span>
+                    </div>
                 </div>
+
+                <!-- Proyek 3 (GANTI) -->
+                <div class="project-card glow-card bg-slate-800/50 rounded-2xl shadow-lg overflow-hidden flex flex-col cursor-pointer border border-slate-700/50" data-project-id="3">
+                    <img class="h-48 w-full object-cover" src="https://placehold.co/600x400/1e293b/94a3b8?text=Desain+Sistem" alt="Desain Sistem E-commerce">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-semibold text-white mb-2">Desain Sistem E-commerce</h3>
+                        <p class="text-slate-400 text-sm mb-4 flex-grow">
+                            Merancang alur proses bisnis, DFD, dan ERD untuk sistem e-commerce sebagai tugas mata kuliah Analisis & Perancangan Sistem.
+                        </p>
+                        <span class="mt-4 inline-flex items-center justify-center rounded-full bg-slate-700 px-4 py-2 text-sm font-medium text-cyan-400 transition hover:bg-slate-600">
+                            Lihat Detail
+                        </span>
+                    </div>
+                </div>
+
             </div>
         </section>
 
-        <!-- ===== LAYER 6: Kontak ===== -->
-        <section id="kontak" class="py-24 sm:py-32" data-section="kontak">
-            <div class="mx-auto max-w-3xl text-center" data-reveal>
+        <!-- ===== HALAMAN 6: KONTAK ===== -->
+        <section id="page-kontak" class="page-section hidden">
+            <!-- Judul Halaman -->
+            <div class="text-center mb-16">
                 <h2 class="text-base font-semibold leading-7 text-cyan-400">Kontak</h2>
-                <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white mb-6">
+                <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white">
                     Mari Terhubung
                 </p>
-                <p class="text-lg text-slate-400 mb-8">
-                    Ada pertanyaan atau ingin berkolaborasi? Anda bisa hubungi saya langsung, atau gunakan asisten AI di bawah untuk membantu Anda menyusun draf pesan.
-                </p>
-
-                <!-- Dropdown Kontak Cepat -->
-                <div class="relative inline-block text-left mb-8">
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+                <!-- Kolom Kiri: Info Kontak -->
+                <div class="space-y-8">
                     <div>
-                        <button type="button" id="contact-dropdown-button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-slate-800 px-5 py-3 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-slate-700 hover:bg-slate-700">
-                            Kontak Cepat Saya
-                            <svg class="-mr-1 h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.23 8.29a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
+                        <h3 class="text-2xl font-bold text-white mb-4">Informasi Kontak</h3>
+                        <p class="text-lg text-slate-400 mb-6">
+                            Cara terbaik untuk menghubungi saya adalah melalui email atau LinkedIn. Saya juga aktif di WhatsApp untuk diskusi yang lebih cepat.
+                        </p>
                     </div>
+                    
+                    <div class="space-y-6">
+                        <!-- Email -->
+                        <a href="mailto:kuatriawan69@gmail.com" class="flex items-center group">
+                            <div class="flex-shrink-0 w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center transition-colors group-hover:bg-cyan-500">
+                                <svg class="w-6 h-6 text-cyan-400 transition-colors group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-4.5v.001" /></svg>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-semibold text-white transition-colors group-hover:text-cyan-400">Email</h4>
+                                <p class="text-slate-400">kuatriawan69@gmail.com</p>
+                            </div>
+                        </a>
+                        
+                        <!-- WhatsApp -->
+                        <a href="https://wa.me/628111402604" target="_blank" rel="noopener noreferrer" class="flex items-center group">
+                            <div class="flex-shrink-0 w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center transition-colors group-hover:bg-cyan-500">
+                                <svg class="w-6 h-6 text-cyan-400 transition-colors group-hover:text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 12c0 1.76.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91s-4.45-9.91-9.91-9.91zM17.2 15.58c-.27-.13-1.59-.78-1.84-.88s-.43-.13-.61.13c-.18.27-.69.88-.85 1.05s-.31.18-.58.06c-.27-.12-1.14-.42-2.17-1.34c-.81-.72-1.36-1.61-1.51-1.88c-.15-.27-.02-.42.12-.54c.12-.12.27-.31.4-.46c.14-.15.18-.27.27-.45s.04-.34-.02-.47c-.07-.13-.61-1.47-.84-2c-.22-.54-.45-.46-.61-.47c-.15-.01-.33-.01-.5-.01s-.43.06-.66.31c-.23.25-.88.85-.88 2.07c0 1.22.9 2.4 1.03 2.56c.13.18 1.76 2.67 4.25 3.73c.59.25 1.05.4 1.41.51c.54.17.97.14 1.32.09c.39-.06 1.19-.49 1.36-0.96c.17-.47.17-.87.12-0.96c-.05-.09-.18-.14-.45-.27z"/></svg>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-semibold text-white transition-colors group-hover:text-cyan-400">WhatsApp</h4>
+                                <p class="text-slate-400">+62 811-1402-604</p>
+                            </div>
+                        </a>
+                        
+                        <!-- LinkedIn -->
+                        <a href="https://www.linkedin.com/in/kuatriawan" target="_blank" rel="noopener noreferrer" class="flex items-center group">
+                            <div class="flex-shrink-0 w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center transition-colors group-hover:bg-cyan-500">
+                                <svg class="w-6 h-6 text-cyan-400 transition-colors group-hover:text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-semibold text-white transition-colors group-hover:text-cyan-400">LinkedIn</h4>
+                                <p class="text-slate-400">/in/kuatriawan</p>
+                            </div>
+                        </a>
 
-                    <!-- Menu Dropdown dengan LOGO (PERBAIKAN) -->
-                    <div id="contact-dropdown-menu" class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-slate-800 shadow-lg ring-1 ring-slate-700 focus:outline-none hidden" role="menu" aria-orientation="vertical" tabindex="-1">
-                        <div class="py-1" role="none">
-                            <!-- WhatsApp -->
-                            <a href="https://wa.me/628111402604" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:bg-slate-700 hover:text-cyan-400 flex items-center gap-x-3 px-4 py-2 text-sm" role="menuitem" tabindex="-1">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 12c0 1.76.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91s-4.45-9.91-9.91-9.91zM17.2 15.58c-.27-.13-1.59-.78-1.84-.88s-.43-.13-.61.13c-.18.27-.69.88-.85 1.05s-.31.18-.58.06c-.27-.12-1.14-.42-2.17-1.34c-.81-.72-1.36-1.61-1.51-1.88c-.15-.27-.02-.42.12-.54c.12-.12.27-.31.4-.46c.14-.15.18-.27.27-.45s.04-.34-.02-.47c-.07-.13-.61-1.47-.84-2c-.22-.54-.45-.46-.61-.47c-.15-.01-.33-.01-.5-.01s-.43.06-.66.31c-.23.25-.88.85-.88 2.07c0 1.22.9 2.4 1.03 2.56c.13.18 1.76 2.67 4.25 3.73c.59.25 1.05.4 1.41.51c.54.17.97.14 1.32.09c.39-.06 1.19-.49 1.36-0.96c.17-.47.17-.87.12-0.96c-.05-.09-.18-.14-.45-.27z"/></svg>
-                                <span>WhatsApp</span>
-                            </a>
-                            <!-- Email -->
-                            <a href="mailto:kuatriawan69@gmail.com" class="text-slate-300 hover:bg-slate-700 hover:text-cyan-400 flex items-center gap-x-3 px-4 py-2 text-sm" role="menuitem" tabindex="-1">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-4.5v.001" /></svg>
-                                <span>Email</span>
-                            </a>
-                            <!-- Instagram -->
-                            <a href="https://www.instagram.com/by.awans?igsh=dzE5YzRjd21yeGx3&utm_source=qr" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:bg-slate-700 hover:text-cyan-400 flex items-center gap-x-3 px-4 py-2 text-sm" role="menuitem" tabindex="-1">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.053 1.902.22 2.596.476.7.26 1.22.61 1.72 1.11.5.5.85 1.02 1.11 1.72.256.694.423 1.426.476 2.596.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.053 1.17-.22 1.902-.476 2.596-.26.7-.61 1.22-1.11 1.72-.5.5-1.02.85-1.72 1.11-.694.256-1.426.423-2.596.476-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.053-1.902-.22-2.596-.476-.7-.26-1.22-.61-1.72-1.11-.5-.5-.85-1.02-1.11-1.72-.256-.694-.423-1.426-.476 2.596-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.053-1.17.22 1.902.476 2.596.26-.7.61-1.22 1.11-1.72.5-.5 1.02.85 1.72-1.11.694-.256 1.426.423 2.596.476C8.416 2.175 8.796 2.163 12 2.163Zm0 1.626c-3.17 0-3.54.012-4.78.07-1.1.05-1.73.21-2.22.41-.5.2-.87.47-1.23.83-.36.36-.63.73-.83 1.23-.2.49-.36 1.12-.41 2.22-.058 1.24-.07 1.61-.07 4.78s.012 3.54.07 4.78c.05 1.1.21 1.73.41 2.22.2.5.47.87.83 1.23.36.36.73.63 1.23.83.49.2 1.12.36 2.22.41 1.24.058 1.61.07 4.78.07s3.54-.012 4.78-.07c1.1-.05 1.73-.21 2.22-.41.5-.2.87-.47 1.23-.83.36-.36.63.73-.83-1.23.2-.49.36-1.12.41-2.22.058-1.24.07-1.61.07-4.78s-.012-3.54-.07-4.78c-.05-1.1-.21-1.73-.41-2.22-.2-.5-.47-.87-.83-1.23-.36-.36-.73-.63-1.23-.83-.49-.2-1.12-.36-2.22-.41C15.54 3.8 15.17 3.789 12 3.789Zm0 3.169a5.042 5.042 0 1 0 0 10.084 5.042 5.042 0 0 0 0-10.084Zm0 1.626a3.416 3.416 0 1 1 0 6.832 3.416 3.416 0 0 1 0-6.832Zm6.405-1.9c.71 0 1.28.57 1.28 1.28s-.57 1.28-1.28 1.28c-.71 0-1.28-.57-1.28-1.28s.57-1.28 1.28-1.28Z" clip-rule="evenodd" /></svg>
-                                <span>Instagram</span>
-                            </a>
-                            <!-- LinkedIn -->
-                            <a href="https://www.linkedin.com/in/kuatriawan?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:bg-slate-700 hover:text-cyan-400 flex items-center gap-x-3 px-4 py-2 text-sm" role="menuitem" tabindex="-1">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
-                                <span>LinkedIn</span>
-                            </a>
-                            <!-- GitHub -->
-                            <a href="https://github.com/KuatRiawan" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:bg-slate-700 hover:text-cyan-400 flex items-center gap-x-3 px-4 py-2 text-sm" role="menuitem" tabindex="-1">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.5.499.09.682-.217.682-.483 0-.237-.008-.865-.013-1.693-2.782.602-3.369-1.34-3.369-1.34-.454-1.157-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.527 2.34 1.086 2.91.83.091-.645.35-1.083.636-1.332-2.22-.25-4.557-1.107-4.557-4.934 0-1.09.39-1.984 1.029-2.685-.103-.253-.446-1.27.098-2.647 0 0 .84-.268 2.75 1.025A9.548 9.548 0 0112 6.83c.85.004 1.705.114 2.504.336 1.909-1.293 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.701 1.028 1.595 1.028 2.685 0 3.838-2.339 4.68-4.566 4.92.359.307.678.915.678 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.18.577.688.48 3.97-1.32 6.833-5.075 6.833-9.5C22 6.484 17.523 2 12 2z" clip-rule="evenodd" /></svg>
-                                <span>GitHub</span>
-                            </a>
-                        </div>
+                        <!-- GitHub -->
+                        <a href="https://github.com/KuatRiawan" target="_blank" rel="noopener noreferrer" class="flex items-center group">
+                            <div class="flex-shrink-0 w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center transition-colors group-hover:bg-cyan-500">
+                                <svg class="w-6 h-6 text-cyan-400 transition-colors group-hover:text-white" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.5.499.09.682-.217.682-.483 0-.237-.008-.865-.013-1.693-2.782.602-3.369-1.34-3.369-1.34-.454-1.157-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.527 2.34 1.086 2.91.83.091-.645.35-1.083.636-1.332-2.22-.25-4.557-1.107-4.557-4.934 0-1.09.39-1.984 1.029-2.685-.103-.253-.446-1.27.098-2.647 0 0 .84-.268 2.75 1.025A9.548 9.548 0 0112 6.83c.85.004 1.705.114 2.504.336 1.909-1.293 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.701 1.028 1.595 1.028 2.685 0 3.838-2.339 4.68-4.566 4.92.359.307.678.915.678 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.18.577.688.48 3.97-1.32 6.833-5.075 6.833-9.5C22 6.484 17.523 2 12 2z" clip-rule="evenodd" /></svg>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-semibold text-white transition-colors group-hover:text-cyan-400">GitHub</h4>
+                                <p class="text-slate-400">/KuatRiawan</p>
+                            </div>
+                        </a>
+
+                        <!-- Instagram -->
+                        <a href="https://www.instagram.com/by.awans" target="_blank" rel="noopener noreferrer" class="flex items-center group">
+                            <div class="flex-shrink-0 w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center transition-colors group-hover:bg-cyan-500">
+                                <svg class="w-6 h-6 text-cyan-400 transition-colors group-hover:text-white" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.053 1.902.22 2.596.476.7.26 1.22.61 1.72 1.11.5.5.85 1.02 1.11 1.72.256.694.423 1.426.476 2.596.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.053 1.17-.22 1.902-.476 2.596-.26.7-.61 1.22-1.11 1.72-.5.5-1.02.85-1.72 1.11-.694.256-1.426.423-2.596.476-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.053-1.902-.22-2.596-.476-.7-.26-1.22-.61-1.72-1.11-.5-.5-.85-1.02-1.11-1.72-.256-.694-.423-1.426-.476-2.596-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.053-1.17.22-1.902.476 2.596.26-.7.61-1.22 1.11-1.72.5-.5 1.02.85 1.72-1.11.694-.256 1.426.423 2.596.476C8.416 2.175 8.796 2.163 12 2.163Zm0 1.626c-3.17 0-3.54.012-4.78.07-1.1.05-1.73.21-2.22.41-.5.2-.87.47-1.23.83-.36.36-.63.73-.83 1.23-.2.49-.36 1.12-.41 2.22-.058 1.24-.07 1.61-.07 4.78s.012 3.54.07 4.78c.05 1.1.21 1.73.41 2.22.2.5.47.87.83 1.23.36.36.73.63 1.23.83.49.2 1.12.36 2.22.41 1.24.058 1.61.07 4.78.07s3.54-.012 4.78-.07c1.1-.05 1.73-.21 2.22-.41.5-.2.87-.47 1.23-.83.36-.36.63.73-.83-1.23.2-.49.36-1.12.41-2.22.058-1.24.07-1.61.07-4.78s-.012-3.54-.07-4.78c-.05-1.1-.21-1.73-.41-2.22-.2-.5-.47-.87-.83-1.23-.36-.36-.73-.63-1.23-.83-.49-.2-1.12-.36-2.22-.41C15.54 3.8 15.17 3.789 12 3.789Zm0 3.169a5.042 5.042 0 1 0 0 10.084 5.042 5.042 0 0 0 0-10.084Zm0 1.626a3.416 3.416 0 1 1 0 6.832 3.416 3.416 0 0 1 0-6.832Zm6.405-1.9c.71 0 1.28.57 1.28 1.28s-.57 1.28-1.28 1.28c-.71 0-1.28-.57-1.28-1.28s.57-1.28 1.28-1.28Z" clip-rule="evenodd" /></svg>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-semibold text-white transition-colors group-hover:text-cyan-400">Instagram</h4>
+                                <p class="text-slate-400">@by.awans</p>
+                            </div>
+                        </a>
                     </div>
                 </div>
-
-
-                <!-- Form AI -->
-                <div class="bg-slate-800 p-6 sm:p-8 rounded-xl shadow-lg text-left" data-reveal>
-                    <h3 class="text-xl font-semibold text-white mb-4">Asisten Penulis Pesan (AI)</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="user-name" class="block text-sm font-medium text-slate-300">Nama Anda</label>
-                            <input type="text" id="user-name" class="mt-1 block w-full rounded-md border-slate-700 bg-slate-900 px-3 py-2 text-white focus:border-cyan-500 focus:ring-cyan-500">
+                
+                <!-- Kolom Kanan: Formulir Kontak -->
+                <div class="bg-slate-800/50 p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-700/50">
+                    <form id="contact-form">
+                        <div class="space-y-6">
+                            <div>
+                                <label for="contact-name" class="block text-sm font-medium text-slate-300">Nama Anda</label>
+                                <input type="text" id="contact-name" name="contact-name" required
+                                       class="mt-1 block w-full rounded-md border-slate-700 bg-slate-800 px-3 py-2 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500">
+                            </div>
+                            <div>
+                                <label for="contact-email" class="block text-sm font-medium text-slate-300">Email Anda</label>
+                                <input type="email" id="contact-email" name="contact-email" required
+                                       class="mt-1 block w-full rounded-md border-slate-700 bg-slate-800 px-3 py-2 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500">
+                            </div>
+                            <div>
+                                <label for="contact-message" class="block text-sm font-medium text-slate-300">Pesan</label>
+                                <textarea id="contact-message" name="contact-message" rows="4" required
+                                          class="mt-1 block w-full rounded-md border-slate-700 bg-slate-800 px-3 py-2 text-white shadow-sm focus:border-cyan-500 focus:ring-cyan-500"></textarea>
+                            </div>
+                            <div>
+                                <button type="submit" id="contact-submit-button"
+                                        class="btn-gradient inline-flex w-full items-center justify-center rounded-full px-7 py-3 text-sm font-semibold text-white shadow-lg">
+                                    Kirim Pesan
+                                </button>
+                            </div>
                         </div>
-                        <div>
-                            <label for="message-idea" class="block text-sm font-medium text-slate-300">Ide Pesan Anda</label>
-                            <textarea id="message-idea" rows="3" class="mt-1 block w-full rounded-md border-slate-700 bg-slate-900 px-3 py-2 text-white focus:border-cyan-500 focus:ring-cyan-500" placeholder="cth: 'ingin tanya tentang proyek visualisasi data'"></textarea>
-                        </div>
-                        <button id="generate-message-button" class="inline-flex items-center justify-center rounded-full bg-cyan-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-800">
-                            <span id="message-button-text">Buat Draf Pesan</span>
-                            <span id="message-spinner" class="hidden spinner"></span>
-                        </button>
-                        
-                        <div id="message-output-container" class="hidden">
-                            <label class="block text-sm font-medium text-slate-300">Draf Pesan (bisa disalin):</label>
-                            <div id="message-output" class="mt-1 min-h-[150px] w-full rounded-md border border-slate-700 bg-slate-900 p-3 text-slate-300 whitespace-pre-wrap"></div>
-                        </div>
-                    </div>
+                        <p id="contact-status" class="mt-4 text-center text-sm text-cyan-400"></p>
+                    </form>
                 </div>
             </div>
         </section>
@@ -537,27 +640,12 @@
     </main>
     
     <!-- ===== FOOTER ===== -->
-    <footer class="bg-slate-900 border-t border-slate-800" data-reveal>
-        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-            <div class="flex flex-col sm:flex-row justify-between items-center">
-                <p class="text-sm text-slate-500 mb-4 sm:mb-0">
-                    &copy; 2025 Kuat Riawan
-                </p>
-                <!-- Link Sosmed -->
-                <div class="flex space-x-6">
-                    <a href="https://github.com/KuatRiawan" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-cyan-400 transition" aria-label="GitHub">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.5.499.09.682-.217.682-.483 0-.237-.008-.865-.013-1.693-2.782.602-3.369-1.34-3.369-1.34-.454-1.157-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.527 2.34 1.086 2.91.83.091-.645.35-1.083.636-1.332-2.22-.25-4.557-1.107-4.557-4.934 0-1.09.39-1.984 1.029-2.685-.103-.253-.446-1.27.098-2.647 0 0 .84-.268 2.75 1.025A9.548 9.548 0 0112 6.83c.85.004 1.705.114 2.504.336 1.909-1.293 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.701 1.028 1.595 1.028 2.685 0 3.838-2.339 4.68-4.566 4.92.359.307.678.915.678 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.18.577.688.48 3.97-1.32 6.833-5.075 6.833-9.5C22 6.484 17.523 2 12 2z" clip-rule="evenodd" /></svg>
-                    </a>
-                    <a href="https://www.linkedin.com/in/kuatriawan?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-cyan-400 transition" aria-label="LinkedIn">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
-                    </a>
-                    <a href="https://www.instagram.com/by.awans?igsh=dzE5YzRjd21yeGx3&utm_source=qr" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-cyan-400 transition" aria-label="Instagram">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.053 1.902.22 2.596.476.7.26 1.22.61 1.72 1.11.5.5.85 1.02 1.11 1.72.256.694.423 1.426.476 2.596.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.053 1.17-.22 1.902-.476 2.596-.26.7-.61 1.22-1.11 1.72-.5.5-1.02.85-1.72 1.11-.694.256-1.426.423-2.596.476-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.053-1.902-.22-2.596-.476-.7-.26-1.22-.61-1.72-1.11-.5-.5-.85-1.02-1.11-1.72-.256-.694-.423-1.426-.476 2.596-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.053-1.17.22 1.902.476 2.596.26-.7.61-1.22 1.11-1.72.5-.5 1.02.85 1.72-1.11.694-.256 1.426.423 2.596.476C8.416 2.175 8.796 2.163 12 2.163Zm0 1.626c-3.17 0-3.54.012-4.78.07-1.1.05-1.73.21-2.22.41-.5.2-.87.47-1.23.83-.36.36-.63.73-.83 1.23-.2.49-.36 1.12-.41 2.22-.058 1.24-.07 1.61-.07 4.78s.012 3.54.07 4.78c.05 1.1.21 1.73.41 2.22.2.5.47.87.83 1.23.36.36.73.63 1.23.83.49.2 1.12.36 2.22.41 1.24.058 1.61.07 4.78.07s3.54-.012 4.78-.07c1.1-.05 1.73-.21 2.22-.41.5-.2.87-.47 1.23-.83.36-.36.63.73-.83-1.23.2-.49.36-1.12.41-2.22.058-1.24.07-1.61.07-4.78s-.012-3.54-.07-4.78c-.05-1.1-.21-1.73-.41-2.22-.2-.5-.47-.87-.83-1.23-.36-.36-.73-.63-1.23-.83-.49-.2-1.12-.36-2.22-.41C15.54 3.8 15.17 3.789 12 3.789Zm0 3.169a5.042 5.042 0 1 0 0 10.084 5.042 5.042 0 0 0 0-10.084Zm0 1.626a3.416 3.416 0 1 1 0 6.832 3.416 3.416 0 0 1 0-6.832Zm6.405-1.9c.71 0 1.28.57 1.28 1.28s-.57 1.28-1.28 1.28c-.71 0-1.28-.57-1.28-1.28s.57-1.28 1.28-1.28Z" clip-rule="evenodd" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
+    <footer class="border-t border-slate-800/50">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Teks Footer Rata Tengah -->
+            <p class="text-sm text-slate-500 text-center">
+                &copy; 2025 Kuat Riawan. Dibangun dengan Tailwind CSS.
+            </p>
         </div>
     </footer>
     
@@ -610,112 +698,93 @@
             // --- Database Konten Modal (Keterampilan & Proyek) ---
             
             const skillDetails = {
-                '1': {
+                'cv1': {
+                    title: 'Microsoft Office',
+                    description: `<p>Sangat mahir menggunakan Microsoft Office Suite, terutama Word, Excel, dan PowerPoint. Saya terbiasa menggunakan Excel untuk pengelolaan data pelatihan, pembuatan laporan, dan analisis data sederhana menggunakan VLOOKUP dan Pivot Tables.</p>`
+                },
+                'cv2': {
+                    title: 'Public Speaking',
+                    description: `<p>Sebagai Koordinator Pelatihan, saya terlatih untuk berbicara di depan umum, baik saat membuka sesi pelatihan, memberikan arahan, maupun berkomunikasi secara jelas dan percaya diri dengan klien dan peserta.</p>`
+                },
+                'cv3': {
+                    title: 'Analisis Kritis',
+                    description: `<p>Terbiasa menganalisis masalah operasional harian dan menemukan akar penyebabnya. Keterampilan ini saya gunakan untuk mengidentifikasi bottleneck dalam proses administrasi dan mengusulkan perbaikan.</p>`
+                },
+                'cv4': {
+                    title: 'Manajemen Waktu',
+                    description: `<p>Mampu mengelola berbagai tugas dan prioritas secara efektif. Dalam pekerjaan saya, saya harus mengatur jadwal pelatihan, logistik, dan tenggat waktu laporan secara bersamaan, yang membutuhkan organisasi yang kuat.</p>`
+                },
+                'cv5': {
+                    title: 'Kerja Tim',
+                    description: `<p>Sangat terbiasa bekerja dalam tim. Saya berkolaborasi setiap hari dengan instruktur, tim sales, dan departemen keuangan untuk memastikan setiap pelatihan berjalan lancar dari awal hingga akhir.</p>`
+                },
+                'tech1': {
                     title: 'Analisis Proses Bisnis',
-                    description: `
-                        <p>Ini adalah inti dari Sistem Informasi. Saya belajar bagaimana 'membedah' alur kerja sebuah organisasi, dari awal hingga akhir.</p>
-                        <p>Dengan menganalisis proses yang ada (As-Is) dan merancang proses yang lebih baik (To-Be), kita bisa mengidentifikasi di mana letak pemborosan, bottleneck, dan di mana teknologi bisa masuk untuk melakukan otomatisasi. Ini penting untuk meningkatkan efisiensi dan mengurangi biaya operasional.</p>
-                    `
+                    description: `<p>Ini adalah inti dari Sistem Informasi. Saya belajar bagaimana 'membedah' alur kerja sebuah organisasi, dari awal hingga akhir.</p><p>Dengan menganalisis proses yang ada (As-Is) dan merancang proses yang lebih baik (To-Be), kita bisa mengidentifikasi di mana letak pemborosan dan di mana teknologi bisa masuk untuk melakukan otomatisasi.</p>`
                 },
-                '2': {
+                'tech2': {
                     title: 'Basis Data (SQL)',
-                    description: `
-                        <p>Data adalah aset. Saya belajar cara merancang, membuat, dan mengelola database relasional menggunakan SQL (terutama MySQL dan PostgreSQL).</p>
-                        <p>Ini bukan hanya tentang menyimpan data, tapi tentang bagaimana menstrukturkannya dengan benar (Normalisasi), membuat relasi antar tabel (ERD), dan cara mengambil data yang spesifik dengan cepat menggunakan query yang efisien. Tanpa database yang baik, aplikasi tidak akan berjalan optimal.</p>
-                    `
+                    description: `<p>Data adalah aset. Saya belajar cara merancang, membuat, dan mengelola database relasional menggunakan SQL (terutama MySQL).</p><p>Ini bukan hanya tentang menyimpan data, tapi tentang bagaimana menstrukturkannya dengan benar (Normalisasi), membuat relasi (ERD), dan mengambil data yang spesifik dengan cepat.</p>`
                 },
-                '3': {
-                    title: 'Visualisasi Data',
-                    description: `
-                        <p>Data mentah itu sulit dipahami. Saya belajar menggunakan alat seperti Chart.js (untuk web) dan Tableau untuk mengubah tumpukan angka dan teks menjadi grafik, dashboard, dan laporan yang interaktif.</p>
-                        <p>Tujuannya adalah untuk 'bercerita' menggunakan data (data storytelling), sehingga pembuat keputusan (manajer, direktur) bisa dengan cepat memahami tren, menemukan pola, dan mengambil keputusan yang lebih baik berdasarkan fakta.</p>
-                    `
-                },
-                '4': {
-                    title: 'Manajemen Proyek (SI)',
-                    description: `
-                        <p>Membuat sistem informasi adalah sebuah proyek yang kompleks. Saya mempelajari metodologi manajemen proyek, baik itu Waterfall maupun Agile (Scrum).</p>
-                        <p>Ini mencakup cara mendefinisikan ruang lingkup (scope), membuat jadwal (timeline), mengelola sumber daya, mengidentifikasi risiko, dan memastikan proyek selesai tepat waktu dan sesuai anggaran. Keterampilan ini penting untuk menjembatani tim teknis dan kebutuhan bisnis.</p>
-                    `
-                },
-                '5': {
+                'tech3': {
                     title: 'HTML, CSS, & JavaScript',
-                    description: `
-                        <p>Ini adalah tiga pilar utama pengembangan web. HTML untuk struktur (kerangka), CSS untuk tampilan (desain), dan JavaScript untuk fungsionalitas (interaktivitas).</p>
-                        <p>Saya menggunakan ini untuk menerjemahkan desain (UI/UX) menjadi halaman web yang bisa dilihat dan digunakan oleh pengguna. Memahami ketiganya sangat penting untuk membuat aplikasi berbasis web yang responsif dan ramah pengguna.</p>
-                    `
+                    description: `<p>Ini adalah tiga pilar utama pengembangan web. HTML untuk struktur, CSS untuk tampilan, dan JavaScript untuk fungsionalitas.</p><p>Memahami ketiganya sangat penting untuk menerjemahkan desain (UI/UX) menjadi halaman web yang responsif dan fungsional.</p>`
                 },
-                '6': {
+                'tech4': {
                     title: 'Tailwind CSS',
-                    description: `
-                        <p>Ini adalah framework 'utility-first' CSS yang saya gunakan untuk membangun portofolio ini. Berbeda dengan framework lain, Tailwind memungkinkan saya membuat desain kustom dengan sangat cepat langsung di dalam HTML.</p>
-                        <p>Saya tidak perlu bolak-balik menulis file CSS terpisah. Ini mempercepat proses pengembangan UI secara drastis dan menjaga konsistensi desain di seluruh aplikasi.</p>
-                    `
+                    description: `<p>Ini adalah framework 'utility-first' CSS yang saya gunakan untuk membangun portofolio ini.</p><p>Tailwind memungkinkan saya membuat desain kustom dengan sangat cepat langsung di dalam HTML, mempercepat proses pengembangan UI secara drastis.</p>`
                 },
-                '7': {
-                    title: 'Integrasi API',
-                    description: `
-                        <p>API (Application Programming Interface) adalah 'jembatan' yang menghubungkan aplikasi kita dengan layanan lain. Saya belajar cara mengambil (fetch) data dari API eksternal (REST API) dan menggunakannya di aplikasi.</p>
-                        <p>Di portofolio ini, saya mengintegrasikan Google Gemini API. Ini menunjukkan kemampuan saya untuk menggunakan layanan modern untuk menambahkan fungsionalitas 'cerdas' ke dalam aplikasi, seperti generator ide dan asisten penulis ini.</p>
-                    `
+                'tech5': {
+                    title: 'Desain UI/UX (Figma)',
+                    description: `<p>Kemampuan untuk merancang antarmuka (User Interface) dan pengalaman pengguna (User Experience) yang intuitif dan menarik.</p><p>Saya menggunakan Figma untuk membuat wireframe (kerangka) hingga prototipe (desain jadi) yang interaktif, seperti yang terlihat pada salah satu proyek saya.</p>`
                 },
-                '8': {
-                    title: 'Algoritma & Pemrograman',
-                    description: `
-                        <p>Ini adalah fondasi logika. Saya belajar cara berpikir secara terstruktur untuk memecahkan masalah menggunakan kode, terutama dengan bahasa Python dan JavaScript.</p>
-                        <p>Memahami algoritma (seperti sorting, searching) dan struktur data (seperti array, object) membantu saya menulis kode yang tidak hanya 'jalan', tetapi juga efisien, mudah dibaca, dan mudah dikelola (maintainable) di masa depan.</p>
-                    `
-                }
             };
             
             const projectDetails = {
                 '1': {
                     title: 'Desain Web (Studi Kasus Klien)',
-                    image: 'https://inca.ac.id/wp-content/uploads/2024/11/Web-Design.jpg',
+                    image: 'https://placehold.co/600x400/1e293b/94a3b8?text=Web+Design', // GANTI GAMBAR INI
                     description: `
                         <p>Ini adalah proyek desain UI/UX untuk studi kasus klien fiktif yang bergerak di bidang kopi (coffee shop). Fokus utama adalah merancang antarmuka yang bersih, modern, dan mudah digunakan.</p>
                         <p>Saya menggunakan <strong>Figma</strong> untuk membuat seluruh alur desain, mulai dari low-fidelity wireframes hingga high-fidelity prototype.</p>
                         <ul class="list-disc list-inside space-y-2 mt-2">
                             <li><strong>Riset Pengguna:</strong> Menganalisis kebutuhan pengguna (user persona) untuk menentukan alur pemesanan yang paling efisien.</li>
                             <li><strong>Wireframing:</strong> Membuat kerangka dasar tata letak untuk versi desktop dan mobile (responsive design).</li>
-                            <li><strong>Prototyping:</strong> Membuat prototipe interaktif di Figma untuk mensimulasikan pengalaman pengguna saat menjelajahi menu dan melakukan pemesanan.</li>
+                            <li><strong>Prototyping:</strong> Membuat prototipe interaktif di Figma untuk mensimulasikan pengalaman pengguna.</li>
                         </ul>
-                        <p class="mt-2">Proyek ini melatih kemampuan saya dalam berpikir desain (design thinking) dan menerjemahkan kebutuhan bisnis menjadi solusi desain yang fungsional dan estetis.</p>
                     `
                 },
                 '2': {
                     title: 'Analisis Data Penjualan',
-                    image: 'https://ap-southeast-2-seek-apac.graphassets.com/AEzBCRO50TYyqbV6XzRDQz/GX1S6WQETYfXDNTaipg2',
+                    image: 'https://placehold.co/600x400/1e293b/94a3b8?text=Dashboard+Data', // GANTI GAMBAR INI
                     description: `
                         <p>Ini adalah proyek mata kuliah Analisis dan Visualisasi Data. Tujuannya adalah untuk mempraktikkan seluruh alur proses analisis data, mulai dari pembersihan data hingga presentasi insight.</p>
-                        <p>Saya menggunakan dataset penjualan fiktif (CSV) dan melakukan pembersihan data (data cleaning) menggunakan Python (Pandas). Setelah data bersih, saya mengimpornya ke <strong>Tableau Public</strong>.</p>
+                        <p>Saya menggunakan dataset penjualan fiktif (CSV) dan melakukan pembersihan data (data cleaning). Setelah data bersih, saya mengimpornya ke <strong>Tableau Public</strong>.</p>
                         <p class="mt-2">Di Tableau, saya membuat beberapa visualisasi seperti:</p>
                         <ul class="list-disc list-inside space-y-2 mt-2">
                             <li>Tren penjualan bulanan (Line Chart).</li>
                             <li>Produk terlaris berdasarkan kategori (Bar Chart).</li>
                             <li>Peta persebaran penjualan berdasarkan wilayah (Geospatial Map).</li>
                         </ul>
-                        <p class="mt-2">Semua visualisasi ini digabungkan menjadi sebuah <strong>dashboard interaktif</strong> yang memungkinkan pengguna mem-filter data berdasarkan tahun dan wilayah.</p>
+                        <p class="mt-2">Semua visualisasi ini digabungkan menjadi sebuah <strong>dashboard interaktif</strong>.</p>
                     `
                 },
                 '3': {
                     title: 'Desain Sistem E-commerce',
-                    image: 'https://koinworks.com/wp-content/uploads/2017/10/platform-ecommerce-bisnis-online-toko-online.jpg',
+                    image: 'https://placehold.co/600x400/1e293b/94a3b8?text=Desain+Sistem', // GANTI GAMBAR INI
                     description: `
                         <p>Sebagai bagian dari mata kuliah Analisis dan Perancangan Sistem, saya ditugaskan untuk merancang sebuah sistem e-commerce sederhana dari awal.</p>
                         <p>Fokusnya bukan pada coding, tetapi pada <strong>perancangan proses bisnis</strong>. Saya membuat dokumentasi lengkap yang mencakup:</p>
                         <ul class="list-disc list-inside space-y-2 mt-2">
-                            <li><strong>Analisis Kebutuhan:</strong> Mendefinisikan apa saja yang harus bisa dilakukan oleh sistem (kebutuhan fungsional dan non-fungsional).</li>
-                            <li><strong>Use Case Diagram:</strong> Menjelaskan interaksi antara aktor (Pengguna, Admin) dengan sistem.</li>
-                            <li><strong>Data Flow Diagram (DFD):</strong> Memetakan alur data di dalam sistem, dari input hingga output.</li>
-                            <li><strong>Entity-Relationship Diagram (ERD):</strong> Merancang struktur database, termasuk tabel (entitas) dan relasinya.</li>
+                            <li>Analisis Kebutuhan Fungsional dan Non-Fungsional.</li>
+                            <li>Use Case Diagram (Interaksi Aktor).</li>
+                            <li>Data Flow Diagram (DFD - Alur Data).</li>
+                            <li>Entity-Relationship Diagram (ERD - Desain Database).</li>
                         </ul>
-                        <p class="mt-2">Proyek ini melatih kemampuan saya untuk berpikir secara terstruktur dan merencanakan sistem sebelum mulai menulis satu baris kode pun.</p>
                     `
                 }
             };
             
-
             // --- Logika Menu Mobile ---
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
@@ -723,62 +792,61 @@
                 const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
                 mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
                 mobileMenu.classList.toggle('hidden');
-                // Ganti ikon burger/close
                 mobileMenuButton.innerHTML = isExpanded
                     ? '<svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>'
                     : '<svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
             });
-            // Tutup menu mobile saat link diklik
-            mobileMenu.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+            
+            // --- Logika Navigasi & Ganti Halaman ---
+            const navLinks = document.querySelectorAll('[data-page-target]');
+            const pages = document.querySelectorAll('.page-section');
+            const allNavLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('data-page-target'); // "page-beranda", "page-tentang", etc.
+                    const targetPage = document.getElementById(targetId);
+                    
+                    // Sembunyikan semua halaman
+                    pages.forEach(page => {
+                        page.classList.add('hidden');
+                    });
+                    
+                    // Tampilkan halaman target
+                    if (targetPage) {
+                        targetPage.classList.remove('hidden');
+                    }
+                    
+                    // Update link aktif di navigasi
+                    allNavLinks.forEach(nav => {
+                        nav.classList.remove('nav-active');
+                        if (nav.getAttribute('data-page-target') === targetId) {
+                            nav.classList.add('nav-active');
+                        }
+                    });
+                    
+                    // Gulir ke atas
+                    window.scrollTo(0, 0);
+                    
+                    // Tutup menu mobile jika terbuka
                     mobileMenu.classList.add('hidden');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
                     mobileMenuButton.innerHTML = '<svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>';
                 });
             });
 
-            
-            // --- Logika Navigasi Aktif saat Scroll ---
-            const sections = document.querySelectorAll('section[data-section]');
-            const navLinks = document.querySelectorAll('.nav-link');
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.4 // 40% dari section terlihat
-            };
-
-            const sectionObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const sectionId = entry.target.getAttribute('data-section');
-                        navLinks.forEach(link => {
-                            link.classList.toggle('nav-active', link.getAttribute('data-section') === sectionId);
-                        });
-                    }
+            // --- Logika Efek Glow Card ---
+            document.querySelectorAll('.glow-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
                 });
-            }, observerOptions);
-
-            sections.forEach(section => {
-                sectionObserver.observe(section);
             });
 
-
-            // --- Logika Animasi Scroll Reveal ---
-            const revealElements = document.querySelectorAll('[data-reveal]');
-            const revealObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-revealed');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            revealElements.forEach(el => {
-                revealObserver.observe(el);
-            });
-            
-            
             // --- Logika Modal Keterampilan ---
             const skillModal = document.getElementById('skill-modal');
             const skillModalOverlay = document.getElementById('skill-modal-overlay');
@@ -833,131 +901,25 @@
             
             projectModalOverlay.addEventListener('click', closeProjectModal);
             projectModalClose.addEventListener('click', closeProjectModal);
-            
 
-            // --- Logika Dropdown Kontak Cepat ---
-            const contactDropdownButton = document.getElementById('contact-dropdown-button');
-            const contactDropdownMenu = document.getElementById('contact-dropdown-menu');
+            // --- Logika Form Kontak ---
+            const contactForm = document.getElementById('contact-form');
+            const contactSubmitButton = document.getElementById('contact-submit-button');
+            const contactStatus = document.getElementById('contact-status');
             
-            contactDropdownButton.addEventListener('click', () => {
-                contactDropdownMenu.classList.toggle('hidden');
-            });
-            
-            // Tutup jika klik di luar
-            window.addEventListener('click', (e) => {
-                if (!contactDropdownButton.contains(e.target) && !contactDropdownMenu.contains(e.target)) {
-                    contactDropdownMenu.classList.add('hidden');
-                }
-            });
-
-
-            // --- Logika API Gemini ---
-            const apiKey = ""; // Kunci API tidak diperlukan, akan ditangani oleh Canvas
-            
-            // Fungsi pemanggil Gemini dasar
-            async function getGeminiResponse(prompt, systemInstruction = "") {
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Ini hanya simulasi. Untuk form sungguhan, perlu backend.
+                contactSubmitButton.disabled = true;
+                contactSubmitButton.textContent = 'Mengirim...';
+                contactStatus.textContent = '';
                 
-                const payload = {
-                    contents: [{ parts: [{ text: prompt }] }],
-                    systemInstruction: systemInstruction ? { parts: [{ text: systemInstruction }] } : undefined,
-                };
-
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`API Error: ${response.status} ${response.statusText}`);
-                    }
-
-                    const result = await response.json();
-                    
-                    if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
-                        return result.candidates[0].content.parts[0].text;
-                    } else {
-                        console.error("Respon API tidak valid:", result);
-                        return "Maaf, terjadi kesalahan saat mengambil respons AI.";
-                    }
-                } catch (error) {
-                    console.error("Fetch error:", error);
-                    return "Maaf, tidak dapat terhubung ke layanan AI. Periksa koneksi Anda.";
-                }
-            }
-            
-            // Fitur 1: Generator Ide Proyek
-            const ideaInput = document.getElementById('project-idea-input');
-            const ideaButton = document.getElementById('generate-idea-button');
-            const ideaOutput = document.getElementById('project-idea-output');
-            const ideaSpinner = document.getElementById('idea-spinner');
-            const ideaButtonText = document.getElementById('idea-button-text');
-            
-            ideaButton.addEventListener('click', async () => {
-                const topic = ideaInput.value.trim();
-                if (!topic) {
-                    ideaOutput.textContent = "Silakan masukkan topik terlebih dahulu.";
-                    ideaOutput.classList.remove('hidden');
-                    return;
-                }
-                
-                // Tampilkan loading
-                ideaButtonText.classList.add('hidden');
-                ideaSpinner.classList.remove('hidden');
-                ideaButton.disabled = true;
-                ideaOutput.classList.remove('hidden');
-                ideaOutput.textContent = "AI sedang mencari ide...";
-
-                const systemPrompt = "Anda adalah seorang mentor Sistem Informasi. Berikan satu ide proyek yang ringkas, kreatif, dan relevan dengan bidang Sistem Informasi berdasarkan kata kunci yang diberikan. Jawab dalam satu paragraf singkat.";
-                const prompt = `Berikan saya satu ide proyek Sistem Informasi yang berkaitan dengan: "${topic}"`;
-                
-                const response = await getGeminiResponse(prompt, systemPrompt);
-                
-                // Sembunyikan loading
-                ideaOutput.textContent = response;
-                ideaButtonText.classList.remove('hidden');
-                ideaSpinner.classList.add('hidden');
-                ideaButton.disabled = false;
-            });
-            
-            // Fitur 2: Asisten Penulis Pesan
-            const messageIdeaInput = document.getElementById('message-idea');
-            const userNameInput = document.getElementById('user-name');
-            const messageButton = document.getElementById('generate-message-button');
-            const messageOutputContainer = document.getElementById('message-output-container');
-            const messageOutput = document.getElementById('message-output');
-            const messageSpinner = document.getElementById('message-spinner');
-            const messageButtonText = document.getElementById('message-button-text');
-            
-            messageButton.addEventListener('click', async () => {
-                const idea = messageIdeaInput.value.trim();
-                const userName = userNameInput.value.trim() || "Pengunjung"; // Default jika nama kosong
-                
-                if (!idea) {
-                    messageOutput.textContent = "Silakan masukkan ide pesan Anda terlebih dahulu.";
-                    messageOutputContainer.classList.remove('hidden');
-                    return;
-                }
-                
-                // Tampilkan loading
-                messageButtonText.classList.add('hidden');
-                messageSpinner.classList.remove('hidden');
-                messageButton.disabled = true;
-                messageOutputContainer.classList.remove('hidden');
-                messageOutput.textContent = "AI sedang menulis draf...";
-
-                const systemPrompt = "Anda adalah asisten penulis yang sopan dan profesional. Tugas Anda adalah mengubah ide pesan singkat dari pengguna menjadi draf email/pesan yang lengkap, sopan, dan formal. Gunakan Bahasa Indonesia yang baik. Sapa 'Kuat' sebagai penerima pesan.";
-                const prompt = `Nama saya ${userName}. Ubah ide pesan saya ini: "${idea}" menjadi draf pesan yang sopan untuk dikirimkan ke Kuat.`;
-                
-                const response = await getGeminiResponse(prompt, systemPrompt);
-                
-                // Sembunyikan loading
-                messageOutput.textContent = response;
-                messageButtonText.classList.remove('hidden');
-                messageSpinner.classList.add('hidden');
-                messageButton.disabled = false;
+                setTimeout(() => {
+                    contactForm.reset();
+                    contactSubmitButton.disabled = false;
+                    contactSubmitButton.textContent = 'Kirim Pesan';
+                    contactStatus.textContent = 'Pesan Anda telah "disimulasikan" terkirim!';
+                }, 1500);
             });
 
         });
