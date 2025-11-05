@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuat Riawan - Portofolio Sistem Informasi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            /* Pola dot-grid tech (VERSI SUDAH DIPERBAIKI) */
+            background-color: #0f172a; /* bg-slate-900 */
+            background-image: radial-gradient(#1e293b 1px, transparent 1px); /* slate-800 dots */
+            background-size: 1rem 1rem;
+        }
+
+        /* Kelas untuk Navigasi Aktif */
+        .nav-active {
+            color: #22d3ee; /* text-cyan-400 */
+            font-weight: 600;
+        }
+        
+        /* Animasi Scroll Reveal */
+        [data-reveal] {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .is-revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animasi Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #22d3ee; /* border-cyan-400 */
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Styling untuk Modal */
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        .modal-enter {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .modal-enter .modal-content {
+            transform: scale(0.9);
+        }
+        .modal-leave-to {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .modal-leave-to .modal-content {
+            transform: scale(0.9);
+        }
+
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-300 antialiased">
+
+    <!-- ===== HEADER (Navigasi) ===== -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md shadow-lg">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+                <!-- Logo / Nama -->
+                <div class="flex-shrink-0">
+                    <a href="#beranda" class="text-xl font-bold text-white transition hover:text-cyan-400">
+                        Kuat Riawan
+                    </a>
+                </div>
+                
+                <!-- Navigasi Desktop -->
+                <nav class="hidden md:block">
+                    <ul class="flex items-center space-x-6 text-sm font-medium">
+                        <li><a href="#beranda" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-section="beranda">Beranda</a></li>
+                        <li><a href="#tentang" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-section="tentang">Tentang</a></li>
+                        <li><a href="#keterampilan" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-section="keterampilan">Keterampilan</a></li>
+                        <li><a href="#proyek" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-section="proyek">Proyek</a></li>
+                        <li><a href="#ide-proyek" class="nav-link text-slate-300 hover:text-cyan-400 transition" data-section="ide-proyek">Ide Proyek</a></li>
+                        <li>
+                            <a href="#kontak" class="inline-flex items-center justify-center rounded-full bg-cyan-500 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-900">
+                                Kontak
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <!-- Tombol Menu Mobile -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:bg-slate-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                        <span class="sr-only">Buka menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Menu Mobile (Dropdown) -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <ul class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
+                <li><a href="#beranda" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-section="beranda">Beranda</a></li>
+                <li><a href="#tentang" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-section="tentang">Tentang</a></li>
+                <li><a href="#keterampilan" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-section="keterampilan">Keterampilan</a></li>
+                <li><a href="#proyek" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-section="proyek">Proyek</a></li>
+                <li><a href="#ide-proyek" class="nav-link block rounded-md px-3 py-2 text-base font-medium text-slate-300 hover:bg-slate-700 hover:text-white" data-section="ide-proyek">Ide Proyek</a></li>
+                <li><a href="#kontak" class="block rounded-md bg-cyan-500 px-3 py-2 text-base font-medium text-white hover:bg-cyan-400">Kontak</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+        <!-- ===== LAYER 1: Beranda (Home) ===== -->
+        <section id="beranda" class="min-h-screen flex items-center pt-16" data-section="beranda">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full">
+                <!-- Kolom Teks -->
+                <div data-reveal>
+                    <span class="mb-3 inline-block rounded-full bg-cyan-900/50 px-4 py-1 text-sm font-medium text-cyan-400">
+                        Mahasiswa Sistem Informasi
+                    </span>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6">
+                        Halo, saya Kuat Riawan.
+                    </h1>
+                    <p class="text-lg text-slate-400 max-w-lg mb-8">
+                        Mahasiswa Universitas Terbuka dari Program Studi Sistem Informasi. Saat ini saya bekerja sebagai Training Coordinator di PT Upaya Riksa Patra, perusahaan yang bergerak di bidang PJK3.
+                    </p>
+                    <a href="#tentang" class="inline-flex items-center rounded-full bg-cyan-500 px-7 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-900">
+                        Kenal Lebih Jauh
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zmM9.293 8.293a1 1 0 011.414 0l2 2a1 1 0 010 1.414l-2 2a1 1 0 01-1.414-1.414L10.586 11 9.293 9.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+                
+                <!-- Kolom Gambar -->
+                <div class="flex items-center justify-center" data-reveal>
+                    <div class="relative w-80 h-80 sm:w-96 sm:h-96">
+                        <!-- Latar belakang lingkaran gradien -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-cyan-600 to-blue-800 rounded-full blur-2xl opacity-50"></div>
+                        <!-- Gambar (GANTI SRC INI) -->
+                        <img src="https://i.ibb.co.com/vxWj3nTS/IMG-3679-2.jpg" 
+                             alt="Foto profil Kuat Riawan"
+                             class="relative w-full h-full rounded-full object-cover shadow-2xl border-4 border-slate-800">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== LAYER 2: Tentang Saya ===== -->
+        <section id="tentang" class="py-24 sm:py-32" data-section="tentang">
+            <div class="mx-auto max-w-7xl">
+                <!-- Judul Section -->
+                <div class="text-center mb-16" data-reveal>
+                    <h2 class="text-base font-semibold leading-7 text-cyan-400">Tentang Saya</h2>
+                    <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                        Perjalanan Saya di Dunia Teknologi
+                    </p>
+                </div>
+                
+                <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                    <!-- Timeline (Menggantikan Gambar) -->
+                    <div class="flex-1 w-full max-w-md mx-auto" data-reveal>
+                        <ol class="relative border-l border-slate-700 ml-4">                  
+                            <li class="mb-10 ml-6">            
+                                <span class="absolute flex items-center justify-center w-8 h-8 bg-cyan-900 rounded-full -left-4 ring-8 ring-slate-800">
+                                    <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                                </span>
+                                <h3 class="flex items-center mb-1 text-xl font-semibold text-white">2023 - Awal Perjalanan</h3>
+                                <time class="block mb-2 text-sm font-normal leading-none text-slate-500">Memulai Studi</time>
+                                <p class="text-base font-normal text-slate-400">Memulai studi S1 Sistem Informasi di Universitas Terbuka, membangun fondasi di bidang teknologi dan manajemen.</p>
+                            </li>
+                            <li class="mb-10 ml-6">
+                                <span class="absolute flex items-center justify-center w-8 h-8 bg-cyan-900 rounded-full -left-4 ring-8 ring-slate-800">
+                                    <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                                </span>
+                                <h3 class="mb-1 text-xl font-semibold text-white">2024 - Pengembangan Keterampilan</h3>
+                                <time class="block mb-2 text-sm font-normal leading-none text-slate-500">Eksplorasi Web & Data</time>
+                                <p class="text-base font-normal text-slate-400">Menyelesaikan proyek analisis data dan mulai mendalami pengembangan web (HTML, CSS, JavaScript) secara otodidak.</p>
+                            </li>
+                            <li class="ml-6">
+                                <span class="absolute flex items-center justify-center w-8 h-8 bg-cyan-900 rounded-full -left-4 ring-8 ring-slate-800">
+                                    <svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                                </span>
+                                <h3 class="mb-1 text-xl font-semibold text-white">2025 - Teknologi Modern</h3>
+                                <time class="block mb-2 text-sm font-normal leading-none text-slate-500">API & Framework</time>
+                                <p class="text-base font-normal text-slate-400">Mulai bereksperimen dengan API (Gemini) dan framework modern (Tailwind CSS) untuk membangun aplikasi yang lebih interaktif.</p>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <!-- Teks Deskripsi -->
+                    <div class="flex-1" data-reveal>
+                        <p class="text-lg text-slate-400 mb-6">
+                            Sebagai mahasiswa Sistem Informasi dan juga Training Coordinator di perusahaan PJK3, saya banyak belajar bagaimana teknologi bisa membantu meningkatkan efisiensi kerja dan pengelolaan data. Bagi saya, memahami proses bisnis dan menghubungkannya dengan sistem digital adalah langkah penting untuk menciptakan solusi yang berdampak nyata di dunia kerja.
+                        </p>
+                        <p class="text-lg text-slate-400 mb-6">
+                            Saya tertarik mengembangkan sistem yang sederhana tapi fungsional, terutama yang bisa membantu otomatisasi tugas administrasi dan pelatihan. Saat ini, saya aktif memperdalam pengembangan web, analisis data, serta eksplorasi API dan framework modern untuk membangun sistem berbasis data yang lebih terintegrasi dan mudah digunakan.
+                        </p>
+                        <ul class="space-y-4">
+                            <li class="flex items-center">
+                                <svg class="w-6 h-6 text-cyan-400 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <span class="text-slate-300">Terbiasa berpikir analitis dan menyelesaikan masalah dengan pendekatan praktis</span>
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-6 h-6 text-cyan-400 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <span class="text-slate-300">Belajar secara mandiri dan terus mencari cara baru untuk meningkatkan kemampuan</span>
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-6 h-6 text-cyan-400 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                <span class="text-slate-300">Berfokus pada efisiensi kerja dan penerapan teknologi dalam pengembangan SDM</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== LAYER 3: Keterampilan ===== -->
+        <section id="keterampilan" class="py-24 sm:py-32" data-section="keterampilan">
+            <div class="mx-auto max-w-7xl">
+                <!-- Judul Section -->
+                <div class="text-center mb-16" data-reveal>
+                    <h2 class="text-base font-semibold leading-7 text-cyan-400">Keterampilan</h2>
+                    <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                        Teknologi yang Saya Kuasai
+                    </p>
+                </div>
+                
+                <!-- Grid Keterampilan -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Keterampilan 1: Analisis Proses Bisnis -->
+                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
+                         data-reveal 
+                         data-skill-id="1">
+                        <div class="flex-shrink-0 mb-4">
+                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25A2.25 2.25 0 0 1 5.25 3h13.5A2.25 2.25 0 0 1 21 5.25Z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Analisis Sistem & Proses Bisnis</h3>
+                        <p class="text-slate-400 text-sm">Menganalisis kebutuhan organisasi dan memetakan alur proses bisnis agar sistem yang dibangun sesuai tujuan dan efisien.</p>
+                    </div>
+
+                    <!-- Keterampilan 2: Basis Data (SQL) -->
+                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
+                         data-reveal 
+                         data-skill-id="2">
+                        <div class="flex-shrink-0 mb-4">
+                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Basis Data & Manajemen Informasi</h3>
+                        <p class="text-slate-400 text-sm">Merancang dan mengelola basis data untuk menyimpan, mengolah, dan mengamankan informasi organisasi.</p>
+                    </div>
+
+                    <!-- Keterampilan 3: Visualisasi Data -->
+                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
+                         data-reveal 
+                         data-skill-id="3">
+                        <div class="flex-shrink-0 mb-4">
+                           <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h12A2.25 2.25 0 0 0 20.25 14.25V3M3.75 21h16.5M16.5 3.75h.008v.008H16.5V3.75Z" />
+                           </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Pengembangan Aplikasi & Web Sistem</h3>
+                        <p class="text-slate-400 text-sm">Membangun aplikasi berbasis web untuk mendukung kegiatan bisnis dan administrasi organisasi.</p>
+                    </div>
+
+                    <!-- Keterampilan 4: Manajemen Proyek (SI) -->
+                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
+                         data-reveal 
+                         data-skill-id="4">
+                        <div class="flex-shrink-0 mb-4">
+                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75c0-.231-.035-.454-.1-.664M6.75 7.5H18a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 18.75V9.75A2.25 2.25 0 0 1 6.75 7.5Z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Analisis Data & Pelaporan</h3>
+                        <p class="text-slate-400 text-sm">Mengolah data mentah menjadi informasi yang berguna untuk pengambilan keputusan manajerial.</p>
+                    </div>
+
+                    <!-- Keterampilan 5: HTML, CSS, JS -->
+                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
+                         data-reveal 
+                         data-skill-id="5">
+                        <div class="flex-shrink-0 mb-4">
+                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5 0-4.5 16.5" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">HTML, CSS, JS</h3>
+                        <p class="text-slate-400 text-sm">Fondasi utama pengembangan antarmuka (frontend) web.</p>
+                    </div>
+                    
+                    <!-- Keterampilan 6: Tailwind CSS -->
+                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
+                         data-reveal 
+                         data-skill-id="6">
+                        <div class="flex-shrink-0 mb-4">
+                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M6.115 5.19.31 9.25a.75.75 0 0 0 0 1.5l5.805 4.06a.75.75 0 0 0 .93.04L12 11.25l4.955 3.55a.75.75 0 0 0 .93-.04l5.805-4.06a.75.75 0 0 0 0-1.5L17.885 5.19a.75.75 0 0 0-.93.04L12 8.75l-4.955-3.52a.75.75 0 0 0-.93-.04Z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Tailwind CSS</h3>
+                        <p class="text-slate-400 text-sm">Framework CSS modern untuk membangun desain UI dengan cepat.</p>
+                    </div>
+
+                    <!-- Keterampilan 7: API Integration -->
+                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
+                         data-reveal 
+                         data-skill-id="7">
+                        <div class="flex-shrink-0 mb-4">
+                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Integrasi API</h3>
+                        <p class="text-slate-400 text-sm">Menghubungkan aplikasi ke layanan eksternal (REST, Gemini API).</p>
+                    </div>
+                    
+                    <!-- Keterampilan 8: Algoritma & Pemrograman -->
+                    <div class="skill-card bg-slate-800 p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:bg-slate-700 cursor-pointer" 
+                         data-reveal 
+                         data-skill-id="8">
+                        <div class="flex-shrink-0 mb-4">
+                            <svg class="w-12 h-12 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="m6.75 7.5 3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25Z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Algoritma & Pemrograman</h3>
+                        <p class="text-slate-400 text-sm">Dasar logika pemecahan masalah (Python, JavaScript).</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        
+        <!-- ===== LAYER 4: Proyek ===== -->
+        <section id="proyek" class="py-24 sm:py-32" data-section="proyek">
+            <div class="mx-auto max-w-7xl">
+                <!-- Judul Section -->
+                <div class="text-center mb-16" data-reveal>
+                    <h2 class="text-base font-semibold leading-7 text-cyan-400">Portofolio</h2>
+                    <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                        Proyek yang Pernah Saya Kerjakan
+                    </p>
+                </div>
+                
+                <!-- Grid Proyek -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Proyek 1: Web Design (SUDAH DIGANTI) -->
+                    <div class="bg-slate-800 rounded-xl shadow-lg overflow-hidden flex flex-col" data-reveal>
+                        <img class="h-48 w-full object-cover" src="https://inca.ac.id/wp-content/uploads/2024/11/Web-Design.jpg" alt="Web Design">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-semibold text-white mb-2">Desain Web (Studi Kasus)</h3>
+                            <p class="text-slate-400 text-sm mb-4 flex-grow">
+                                Desain UI/UX dan prototipe untuk studi kasus klien fiktif, fokus pada alur pengguna (user flow) dan estetika.
+                            </p>
+                            <button class="project-card mt-4 inline-flex items-center justify-center rounded-md bg-slate-700 px-4 py-2 text-sm font-medium text-cyan-400 transition hover:bg-slate-600 focus:outline-none"
+                                    data-project-id="1">
+                                Lihat Detail
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Proyek 2: Analisis Data Penjualan -->
+                    <div class="bg-slate-800 rounded-xl shadow-lg overflow-hidden flex flex-col" data-reveal>
+                        <img class="h-48 w-full object-cover" src="https://ap-southeast-2-seek-apac.graphassets.com/AEzBCRO50TYyqbV6XzRDQz/GX1S6WQETYfXDNTaipg2" alt="Analisis Data Penjualan">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-semibold text-white mb-2">Analisis Data Penjualan</h3>
+                            <p class="text-slate-400 text-sm mb-4 flex-grow">
+                                Proyek akademik untuk menganalisis data penjualan fiktif, menemukan tren, dan memvisualisasikan insight menggunakan Tableau.
+                            </p>
+                            <button class="project-card mt-4 inline-flex items-center justify-center rounded-md bg-slate-700 px-4 py-2 text-sm font-medium text-cyan-400 transition hover:bg-slate-600 focus:outline-none"
+                                    data-project-id="2">
+                                Lihat Detail
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Proyek 3: Desain Sistem E-commerce -->
+                    <div class="bg-slate-800 rounded-xl shadow-lg overflow-hidden flex flex-col" data-reveal>
+                        <img class="h-48 w-full object-cover" src="https://koinworks.com/wp-content/uploads/2017/10/platform-ecommerce-bisnis-online-toko-online.jpg" alt="Desain Sistem E-commerce">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-semibold text-white mb-2">Desain Sistem E-commerce</h3>
+                            <p class="text-slate-400 text-sm mb-4 flex-grow">
+                                Merancang alur proses bisnis, DFD, dan ERD untuk sistem e-commerce sederhana sebagai tugas mata kuliah Analisis & Perancangan Sistem.
+                            </p>
+                            <button class="project-card mt-4 inline-flex items-center justify-center rounded-md bg-slate-700 px-4 py-2 text-sm font-medium text-cyan-400 transition hover:bg-slate-600 focus:outline-none"
+                                    data-project-id="3">
+                                Lihat Detail
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== LAYER 5: Generator Ide Proyek (Fitur AI) ===== -->
+        <section id="ide-proyek" class="py-24 sm:py-32" data-section="ide-proyek">
+            <div class="mx-auto max-w-3xl text-center" data-reveal>
+                <h2 class="text-base font-semibold leading-7 text-cyan-400">Fitur AI (Gemini)</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white mb-6">
+                    Generator Ide Proyek
+                </p>
+                <p class="text-lg text-slate-400 mb-8">
+                    Butuh inspirasi? Masukkan satu kata kunci (cth: "Data", "Bisnis", "Web"), dan AI akan memberi Anda ide proyek sederhana yang relevan dengan Sistem Informasi.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto mb-6">
+                    <input type="text" id="project-idea-input" class="flex-grow rounded-md border-slate-700 bg-slate-800 px-4 py-3 text-white focus:border-cyan-500 focus:ring-cyan-500" placeholder="Ketik kategori (cth: 'Web')">
+                    <button id="generate-idea-button" class="inline-flex items-center justify-center rounded-full bg-cyan-500 px-7 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-900">
+                        <span id="idea-button-text">Buat Ide</span>
+                        <span id="idea-spinner" class="hidden spinner"></span>
+                    </button>
+                </div>
+                
+                <div id="project-idea-output" class="min-h-[100px] rounded-lg bg-slate-800 p-6 text-left text-slate-400 shadow-inner hidden">
+                    <!-- Hasil AI akan muncul di sini -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== LAYER 6: Kontak ===== -->
+        <section id="kontak" class="py-24 sm:py-32" data-section="kontak">
+            <div class="mx-auto max-w-3xl text-center" data-reveal>
+                <h2 class="text-base font-semibold leading-7 text-cyan-400">Kontak</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-white mb-6">
+                    Mari Terhubung
+                </p>
+                <p class="text-lg text-slate-400 mb-8">
+                    Ada pertanyaan atau ingin berkolaborasi? Anda bisa hubungi saya langsung, atau gunakan asisten AI di bawah untuk membantu Anda menyusun draf pesan.
+                </p>
+
+                <!-- Dropdown Kontak Cepat -->
+                <div class="relative inline-block text-left mb-8">
+                    <div>
+                        <button type="button" id="contact-dropdown-button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-slate-800 px-5 py-3 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-slate-700 hover:bg-slate-700">
+                            Kontak Cepat Saya
+                            <svg class="-mr-1 h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.23 8.29a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Menu Dropdown dengan LOGO (PERBAIKAN) -->
+                    <div id="contact-dropdown-menu" class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-slate-800 shadow-lg ring-1 ring-slate-700 focus:outline-none hidden" role="menu" aria-orientation="vertical" tabindex="-1">
+                        <div class="py-1" role="none">
+                            <!-- WhatsApp -->
+                            <a href="https://wa.me/628111402604" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:bg-slate-700 hover:text-cyan-400 flex items-center gap-x-3 px-4 py-2 text-sm" role="menuitem" tabindex="-1">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 12c0 1.76.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91s-4.45-9.91-9.91-9.91zM17.2 15.58c-.27-.13-1.59-.78-1.84-.88s-.43-.13-.61.13c-.18.27-.69.88-.85 1.05s-.31.18-.58.06c-.27-.12-1.14-.42-2.17-1.34c-.81-.72-1.36-1.61-1.51-1.88c-.15-.27-.02-.42.12-.54c.12-.12.27-.31.4-.46c.14-.15.18-.27.27-.45s.04-.34-.02-.47c-.07-.13-.61-1.47-.84-2c-.22-.54-.45-.46-.61-.47c-.15-.01-.33-.01-.5-.01s-.43.06-.66.31c-.23.25-.88.85-.88 2.07c0 1.22.9 2.4 1.03 2.56c.13.18 1.76 2.67 4.25 3.73c.59.25 1.05.4 1.41.51c.54.17.97.14 1.32.09c.39-.06 1.19-.49 1.36-0.96c.17-.47.17-.87.12-0.96c-.05-.09-.18-.14-.45-.27z"/></svg>
+                                <span>WhatsApp</span>
+                            </a>
+                            <!-- Email -->
+                            <a href="mailto:kuatriawan69@gmail.com" class="text-slate-300 hover:bg-slate-700 hover:text-cyan-400 flex items-center gap-x-3 px-4 py-2 text-sm" role="menuitem" tabindex="-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-4.5v.001" /></svg>
+                                <span>Email</span>
+                            </a>
+                            <!-- Instagram -->
+                            <a href="https://www.instagram.com/by.awans?igsh=dzE5YzRjd21yeGx3&utm_source=qr" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:bg-slate-700 hover:text-cyan-400 flex items-center gap-x-3 px-4 py-2 text-sm" role="menuitem" tabindex="-1">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.053 1.902.22 2.596.476.7.26 1.22.61 1.72 1.11.5.5.85 1.02 1.11 1.72.256.694.423 1.426.476 2.596.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.053 1.17-.22 1.902-.476 2.596-.26.7-.61 1.22-1.11 1.72-.5.5-1.02.85-1.72 1.11-.694.256-1.426.423-2.596.476-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.053-1.902-.22-2.596-.476-.7-.26-1.22-.61-1.72-1.11-.5-.5-.85-1.02-1.11-1.72-.256-.694-.423-1.426-.476 2.596-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.053-1.17.22 1.902.476 2.596.26-.7.61-1.22 1.11-1.72.5-.5 1.02.85 1.72-1.11.694-.256 1.426.423 2.596.476C8.416 2.175 8.796 2.163 12 2.163Zm0 1.626c-3.17 0-3.54.012-4.78.07-1.1.05-1.73.21-2.22.41-.5.2-.87.47-1.23.83-.36.36-.63.73-.83 1.23-.2.49-.36 1.12-.41 2.22-.058 1.24-.07 1.61-.07 4.78s.012 3.54.07 4.78c.05 1.1.21 1.73.41 2.22.2.5.47.87.83 1.23.36.36.73.63 1.23.83.49.2 1.12.36 2.22.41 1.24.058 1.61.07 4.78.07s3.54-.012 4.78-.07c1.1-.05 1.73-.21 2.22-.41.5-.2.87-.47 1.23-.83.36-.36.63.73-.83-1.23.2-.49.36-1.12.41-2.22.058-1.24.07-1.61.07-4.78s-.012-3.54-.07-4.78c-.05-1.1-.21-1.73-.41-2.22-.2-.5-.47-.87-.83-1.23-.36-.36-.73-.63-1.23-.83-.49-.2-1.12-.36-2.22-.41C15.54 3.8 15.17 3.789 12 3.789Zm0 3.169a5.042 5.042 0 1 0 0 10.084 5.042 5.042 0 0 0 0-10.084Zm0 1.626a3.416 3.416 0 1 1 0 6.832 3.416 3.416 0 0 1 0-6.832Zm6.405-1.9c.71 0 1.28.57 1.28 1.28s-.57 1.28-1.28 1.28c-.71 0-1.28-.57-1.28-1.28s.57-1.28 1.28-1.28Z" clip-rule="evenodd" /></svg>
+                                <span>Instagram</span>
+                            </a>
+                            <!-- LinkedIn -->
+                            <a href="https://www.linkedin.com/in/kuatriawan?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:bg-slate-700 hover:text-cyan-400 flex items-center gap-x-3 px-4 py-2 text-sm" role="menuitem" tabindex="-1">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
+                                <span>LinkedIn</span>
+                            </a>
+                            <!-- GitHub -->
+                            <a href="https://github.com/KuatRiawan" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:bg-slate-700 hover:text-cyan-400 flex items-center gap-x-3 px-4 py-2 text-sm" role="menuitem" tabindex="-1">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.5.499.09.682-.217.682-.483 0-.237-.008-.865-.013-1.693-2.782.602-3.369-1.34-3.369-1.34-.454-1.157-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.527 2.34 1.086 2.91.83.091-.645.35-1.083.636-1.332-2.22-.25-4.557-1.107-4.557-4.934 0-1.09.39-1.984 1.029-2.685-.103-.253-.446-1.27.098-2.647 0 0 .84-.268 2.75 1.025A9.548 9.548 0 0112 6.83c.85.004 1.705.114 2.504.336 1.909-1.293 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.701 1.028 1.595 1.028 2.685 0 3.838-2.339 4.68-4.566 4.92.359.307.678.915.678 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.18.577.688.48 3.97-1.32 6.833-5.075 6.833-9.5C22 6.484 17.523 2 12 2z" clip-rule="evenodd" /></svg>
+                                <span>GitHub</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Form AI -->
+                <div class="bg-slate-800 p-6 sm:p-8 rounded-xl shadow-lg text-left" data-reveal>
+                    <h3 class="text-xl font-semibold text-white mb-4">Asisten Penulis Pesan (AI)</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="user-name" class="block text-sm font-medium text-slate-300">Nama Anda</label>
+                            <input type="text" id="user-name" class="mt-1 block w-full rounded-md border-slate-700 bg-slate-900 px-3 py-2 text-white focus:border-cyan-500 focus:ring-cyan-500">
+                        </div>
+                        <div>
+                            <label for="message-idea" class="block text-sm font-medium text-slate-300">Ide Pesan Anda</label>
+                            <textarea id="message-idea" rows="3" class="mt-1 block w-full rounded-md border-slate-700 bg-slate-900 px-3 py-2 text-white focus:border-cyan-500 focus:ring-cyan-500" placeholder="cth: 'ingin tanya tentang proyek visualisasi data'"></textarea>
+                        </div>
+                        <button id="generate-message-button" class="inline-flex items-center justify-center rounded-full bg-cyan-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-800">
+                            <span id="message-button-text">Buat Draf Pesan</span>
+                            <span id="message-spinner" class="hidden spinner"></span>
+                        </button>
+                        
+                        <div id="message-output-container" class="hidden">
+                            <label class="block text-sm font-medium text-slate-300">Draf Pesan (bisa disalin):</label>
+                            <div id="message-output" class="mt-1 min-h-[150px] w-full rounded-md border border-slate-700 bg-slate-900 p-3 text-slate-300 whitespace-pre-wrap"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- ===== FOOTER ===== -->
+    <footer class="bg-slate-900 border-t border-slate-800" data-reveal>
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-sm text-slate-500 mb-4 sm:mb-0">
+                    &copy; 2025 Kuat Riawan
+                </p>
+                <!-- Link Sosmed -->
+                <div class="flex space-x-6">
+                    <a href="https://github.com/KuatRiawan" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-cyan-400 transition" aria-label="GitHub">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.5.499.09.682-.217.682-.483 0-.237-.008-.865-.013-1.693-2.782.602-3.369-1.34-3.369-1.34-.454-1.157-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.527 2.34 1.086 2.91.83.091-.645.35-1.083.636-1.332-2.22-.25-4.557-1.107-4.557-4.934 0-1.09.39-1.984 1.029-2.685-.103-.253-.446-1.27.098-2.647 0 0 .84-.268 2.75 1.025A9.548 9.548 0 0112 6.83c.85.004 1.705.114 2.504.336 1.909-1.293 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.701 1.028 1.595 1.028 2.685 0 3.838-2.339 4.68-4.566 4.92.359.307.678.915.678 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.18.577.688.48 3.97-1.32 6.833-5.075 6.833-9.5C22 6.484 17.523 2 12 2z" clip-rule="evenodd" /></svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/kuatriawan?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-cyan-400 transition" aria-label="LinkedIn">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
+                    </a>
+                    <a href="https://www.instagram.com/by.awans?igsh=dzE5YzRjd21yeGx3&utm_source=qr" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-cyan-400 transition" aria-label="Instagram">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.053 1.902.22 2.596.476.7.26 1.22.61 1.72 1.11.5.5.85 1.02 1.11 1.72.256.694.423 1.426.476 2.596.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.053 1.17-.22 1.902-.476 2.596-.26.7-.61 1.22-1.11 1.72-.5.5-1.02.85-1.72 1.11-.694.256-1.426.423-2.596.476-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.053-1.902-.22-2.596-.476-.7-.26-1.22-.61-1.72-1.11-.5-.5-.85-1.02-1.11-1.72-.256-.694-.423-1.426-.476 2.596-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.053-1.17.22 1.902.476 2.596.26-.7.61-1.22 1.11-1.72.5-.5 1.02.85 1.72-1.11.694-.256 1.426.423 2.596.476C8.416 2.175 8.796 2.163 12 2.163Zm0 1.626c-3.17 0-3.54.012-4.78.07-1.1.05-1.73.21-2.22.41-.5.2-.87.47-1.23.83-.36.36-.63.73-.83 1.23-.2.49-.36 1.12-.41 2.22-.058 1.24-.07 1.61-.07 4.78s.012 3.54.07 4.78c.05 1.1.21 1.73.41 2.22.2.5.47.87.83 1.23.36.36.73.63 1.23.83.49.2 1.12.36 2.22.41 1.24.058 1.61.07 4.78.07s3.54-.012 4.78-.07c1.1-.05 1.73-.21 2.22-.41.5-.2.87-.47 1.23-.83.36-.36.63.73-.83-1.23.2-.49.36-1.12.41-2.22.058-1.24.07-1.61.07-4.78s-.012-3.54-.07-4.78c-.05-1.1-.21-1.73-.41-2.22-.2-.5-.47-.87-.83-1.23-.36-.36-.73-.63-1.23-.83-.49-.2-1.12-.36-2.22-.41C15.54 3.8 15.17 3.789 12 3.789Zm0 3.169a5.042 5.042 0 1 0 0 10.084 5.042 5.042 0 0 0 0-10.084Zm0 1.626a3.416 3.416 0 1 1 0 6.832 3.416 3.416 0 0 1 0-6.832Zm6.405-1.9c.71 0 1.28.57 1.28 1.28s-.57 1.28-1.28 1.28c-.71 0-1.28-.57-1.28-1.28s.57-1.28 1.28-1.28Z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    
+    <!-- ===== MODAL KETERAMPILAN ===== -->
+    <div id="skill-modal" class="modal modal-enter fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="fixed inset-0 bg-black/70 backdrop-blur-sm" id="skill-modal-overlay"></div>
+        <div class="modal-content relative w-full max-w-2xl bg-slate-800 rounded-xl shadow-2xl overflow-hidden border border-slate-700">
+            <div class="p-6 sm:p-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="skill-modal-title" class="text-2xl font-bold text-white">Judul Keterampilan</h3>
+                    <button id="skill-modal-close" class="text-slate-500 hover:text-white transition">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="skill-modal-body" class="text-slate-400 space-y-4">
+                    <p>Deskripsi detail akan muncul di sini.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== MODAL PROYEK ===== -->
+    <div id="project-modal" class="modal modal-enter fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="fixed inset-0 bg-black/70 backdrop-blur-sm" id="project-modal-overlay"></div>
+        <div class="modal-content relative w-full max-w-3xl bg-slate-800 rounded-xl shadow-2xl overflow-hidden border border-slate-700">
+            <button id="project-modal-close" class="absolute top-4 right-4 text-slate-500 hover:text-white transition z-10">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <div>
+                <img id="project-modal-image" src="https://placehold.co/600x400/1e293b/94a3b8?text=Proyek" alt="Gambar Proyek" class="w-full h-64 object-cover">
+            </div>
+            <div class="p-6 sm:p-8">
+                <h3 id="project-modal-title" class="text-2xl font-bold text-white mb-4">Judul Proyek</h3>
+                <div id="project-modal-body" class="text-slate-400 space-y-4">
+                    <p>Deskripsi detail proyek akan muncul di sini.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Database Konten Modal (Keterampilan & Proyek) ---
+            
+            const skillDetails = {
+                '1': {
+                    title: 'Analisis Proses Bisnis',
+                    description: `
+                        <p>Ini adalah inti dari Sistem Informasi. Saya belajar bagaimana 'membedah' alur kerja sebuah organisasi, dari awal hingga akhir.</p>
+                        <p>Dengan menganalisis proses yang ada (As-Is) dan merancang proses yang lebih baik (To-Be), kita bisa mengidentifikasi di mana letak pemborosan, bottleneck, dan di mana teknologi bisa masuk untuk melakukan otomatisasi. Ini penting untuk meningkatkan efisiensi dan mengurangi biaya operasional.</p>
+                    `
+                },
+                '2': {
+                    title: 'Basis Data (SQL)',
+                    description: `
+                        <p>Data adalah aset. Saya belajar cara merancang, membuat, dan mengelola database relasional menggunakan SQL (terutama MySQL dan PostgreSQL).</p>
+                        <p>Ini bukan hanya tentang menyimpan data, tapi tentang bagaimana menstrukturkannya dengan benar (Normalisasi), membuat relasi antar tabel (ERD), dan cara mengambil data yang spesifik dengan cepat menggunakan query yang efisien. Tanpa database yang baik, aplikasi tidak akan berjalan optimal.</p>
+                    `
+                },
+                '3': {
+                    title: 'Visualisasi Data',
+                    description: `
+                        <p>Data mentah itu sulit dipahami. Saya belajar menggunakan alat seperti Chart.js (untuk web) dan Tableau untuk mengubah tumpukan angka dan teks menjadi grafik, dashboard, dan laporan yang interaktif.</p>
+                        <p>Tujuannya adalah untuk 'bercerita' menggunakan data (data storytelling), sehingga pembuat keputusan (manajer, direktur) bisa dengan cepat memahami tren, menemukan pola, dan mengambil keputusan yang lebih baik berdasarkan fakta.</p>
+                    `
+                },
+                '4': {
+                    title: 'Manajemen Proyek (SI)',
+                    description: `
+                        <p>Membuat sistem informasi adalah sebuah proyek yang kompleks. Saya mempelajari metodologi manajemen proyek, baik itu Waterfall maupun Agile (Scrum).</p>
+                        <p>Ini mencakup cara mendefinisikan ruang lingkup (scope), membuat jadwal (timeline), mengelola sumber daya, mengidentifikasi risiko, dan memastikan proyek selesai tepat waktu dan sesuai anggaran. Keterampilan ini penting untuk menjembatani tim teknis dan kebutuhan bisnis.</p>
+                    `
+                },
+                '5': {
+                    title: 'HTML, CSS, & JavaScript',
+                    description: `
+                        <p>Ini adalah tiga pilar utama pengembangan web. HTML untuk struktur (kerangka), CSS untuk tampilan (desain), dan JavaScript untuk fungsionalitas (interaktivitas).</p>
+                        <p>Saya menggunakan ini untuk menerjemahkan desain (UI/UX) menjadi halaman web yang bisa dilihat dan digunakan oleh pengguna. Memahami ketiganya sangat penting untuk membuat aplikasi berbasis web yang responsif dan ramah pengguna.</p>
+                    `
+                },
+                '6': {
+                    title: 'Tailwind CSS',
+                    description: `
+                        <p>Ini adalah framework 'utility-first' CSS yang saya gunakan untuk membangun portofolio ini. Berbeda dengan framework lain, Tailwind memungkinkan saya membuat desain kustom dengan sangat cepat langsung di dalam HTML.</p>
+                        <p>Saya tidak perlu bolak-balik menulis file CSS terpisah. Ini mempercepat proses pengembangan UI secara drastis dan menjaga konsistensi desain di seluruh aplikasi.</p>
+                    `
+                },
+                '7': {
+                    title: 'Integrasi API',
+                    description: `
+                        <p>API (Application Programming Interface) adalah 'jembatan' yang menghubungkan aplikasi kita dengan layanan lain. Saya belajar cara mengambil (fetch) data dari API eksternal (REST API) dan menggunakannya di aplikasi.</p>
+                        <p>Di portofolio ini, saya mengintegrasikan Google Gemini API. Ini menunjukkan kemampuan saya untuk menggunakan layanan modern untuk menambahkan fungsionalitas 'cerdas' ke dalam aplikasi, seperti generator ide dan asisten penulis ini.</p>
+                    `
+                },
+                '8': {
+                    title: 'Algoritma & Pemrograman',
+                    description: `
+                        <p>Ini adalah fondasi logika. Saya belajar cara berpikir secara terstruktur untuk memecahkan masalah menggunakan kode, terutama dengan bahasa Python dan JavaScript.</p>
+                        <p>Memahami algoritma (seperti sorting, searching) dan struktur data (seperti array, object) membantu saya menulis kode yang tidak hanya 'jalan', tetapi juga efisien, mudah dibaca, dan mudah dikelola (maintainable) di masa depan.</p>
+                    `
+                }
+            };
+            
+            const projectDetails = {
+                '1': {
+                    title: 'Desain Web (Studi Kasus Klien)',
+                    image: 'https://inca.ac.id/wp-content/uploads/2024/11/Web-Design.jpg',
+                    description: `
+                        <p>Ini adalah proyek desain UI/UX untuk studi kasus klien fiktif yang bergerak di bidang kopi (coffee shop). Fokus utama adalah merancang antarmuka yang bersih, modern, dan mudah digunakan.</p>
+                        <p>Saya menggunakan <strong>Figma</strong> untuk membuat seluruh alur desain, mulai dari low-fidelity wireframes hingga high-fidelity prototype.</p>
+                        <ul class="list-disc list-inside space-y-2 mt-2">
+                            <li><strong>Riset Pengguna:</strong> Menganalisis kebutuhan pengguna (user persona) untuk menentukan alur pemesanan yang paling efisien.</li>
+                            <li><strong>Wireframing:</strong> Membuat kerangka dasar tata letak untuk versi desktop dan mobile (responsive design).</li>
+                            <li><strong>Prototyping:</strong> Membuat prototipe interaktif di Figma untuk mensimulasikan pengalaman pengguna saat menjelajahi menu dan melakukan pemesanan.</li>
+                        </ul>
+                        <p class="mt-2">Proyek ini melatih kemampuan saya dalam berpikir desain (design thinking) dan menerjemahkan kebutuhan bisnis menjadi solusi desain yang fungsional dan estetis.</p>
+                    `
+                },
+                '2': {
+                    title: 'Analisis Data Penjualan',
+                    image: 'https://ap-southeast-2-seek-apac.graphassets.com/AEzBCRO50TYyqbV6XzRDQz/GX1S6WQETYfXDNTaipg2',
+                    description: `
+                        <p>Ini adalah proyek mata kuliah Analisis dan Visualisasi Data. Tujuannya adalah untuk mempraktikkan seluruh alur proses analisis data, mulai dari pembersihan data hingga presentasi insight.</p>
+                        <p>Saya menggunakan dataset penjualan fiktif (CSV) dan melakukan pembersihan data (data cleaning) menggunakan Python (Pandas). Setelah data bersih, saya mengimpornya ke <strong>Tableau Public</strong>.</p>
+                        <p class="mt-2">Di Tableau, saya membuat beberapa visualisasi seperti:</p>
+                        <ul class="list-disc list-inside space-y-2 mt-2">
+                            <li>Tren penjualan bulanan (Line Chart).</li>
+                            <li>Produk terlaris berdasarkan kategori (Bar Chart).</li>
+                            <li>Peta persebaran penjualan berdasarkan wilayah (Geospatial Map).</li>
+                        </ul>
+                        <p class="mt-2">Semua visualisasi ini digabungkan menjadi sebuah <strong>dashboard interaktif</strong> yang memungkinkan pengguna mem-filter data berdasarkan tahun dan wilayah.</p>
+                    `
+                },
+                '3': {
+                    title: 'Desain Sistem E-commerce',
+                    image: 'https://koinworks.com/wp-content/uploads/2017/10/platform-ecommerce-bisnis-online-toko-online.jpg',
+                    description: `
+                        <p>Sebagai bagian dari mata kuliah Analisis dan Perancangan Sistem, saya ditugaskan untuk merancang sebuah sistem e-commerce sederhana dari awal.</p>
+                        <p>Fokusnya bukan pada coding, tetapi pada <strong>perancangan proses bisnis</strong>. Saya membuat dokumentasi lengkap yang mencakup:</p>
+                        <ul class="list-disc list-inside space-y-2 mt-2">
+                            <li><strong>Analisis Kebutuhan:</strong> Mendefinisikan apa saja yang harus bisa dilakukan oleh sistem (kebutuhan fungsional dan non-fungsional).</li>
+                            <li><strong>Use Case Diagram:</strong> Menjelaskan interaksi antara aktor (Pengguna, Admin) dengan sistem.</li>
+                            <li><strong>Data Flow Diagram (DFD):</strong> Memetakan alur data di dalam sistem, dari input hingga output.</li>
+                            <li><strong>Entity-Relationship Diagram (ERD):</strong> Merancang struktur database, termasuk tabel (entitas) dan relasinya.</li>
+                        </ul>
+                        <p class="mt-2">Proyek ini melatih kemampuan saya untuk berpikir secara terstruktur dan merencanakan sistem sebelum mulai menulis satu baris kode pun.</p>
+                    `
+                }
+            };
+            
+
+            // --- Logika Menu Mobile ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+                mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+                mobileMenu.classList.toggle('hidden');
+                // Ganti ikon burger/close
+                mobileMenuButton.innerHTML = isExpanded
+                    ? '<svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>'
+                    : '<svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+            });
+            // Tutup menu mobile saat link diklik
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuButton.innerHTML = '<svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>';
+                });
+            });
+
+            
+            // --- Logika Navigasi Aktif saat Scroll ---
+            const sections = document.querySelectorAll('section[data-section]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.4 // 40% dari section terlihat
+            };
+
+            const sectionObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const sectionId = entry.target.getAttribute('data-section');
+                        navLinks.forEach(link => {
+                            link.classList.toggle('nav-active', link.getAttribute('data-section') === sectionId);
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                sectionObserver.observe(section);
+            });
+
+
+            // --- Logika Animasi Scroll Reveal ---
+            const revealElements = document.querySelectorAll('[data-reveal]');
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-revealed');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            revealElements.forEach(el => {
+                revealObserver.observe(el);
+            });
+            
+            
+            // --- Logika Modal Keterampilan ---
+            const skillModal = document.getElementById('skill-modal');
+            const skillModalOverlay = document.getElementById('skill-modal-overlay');
+            const skillModalClose = document.getElementById('skill-modal-close');
+            const skillModalTitle = document.getElementById('skill-modal-title');
+            const skillModalBody = document.getElementById('skill-modal-body');
+            
+            document.querySelectorAll('.skill-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const skillId = card.dataset.skillId;
+                    const details = skillDetails[skillId];
+                    if (details) {
+                        skillModalTitle.textContent = details.title;
+                        skillModalBody.innerHTML = details.description;
+                        skillModal.classList.remove('modal-enter');
+                    }
+                });
+            });
+            
+            const closeSkillModal = () => {
+                skillModal.classList.add('modal-enter');
+            };
+            
+            skillModalOverlay.addEventListener('click', closeSkillModal);
+            skillModalClose.addEventListener('click', closeSkillModal);
+            
+            
+            // --- Logika Modal Proyek ---
+            const projectModal = document.getElementById('project-modal');
+            const projectModalOverlay = document.getElementById('project-modal-overlay');
+            const projectModalClose = document.getElementById('project-modal-close');
+            const projectModalTitle = document.getElementById('project-modal-title');
+            const projectModalBody = document.getElementById('project-modal-body');
+            const projectModalImage = document.getElementById('project-modal-image');
+            
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const projectId = card.dataset.projectId;
+                    const details = projectDetails[projectId];
+                    if (details) {
+                        projectModalTitle.textContent = details.title;
+                        projectModalBody.innerHTML = details.description;
+                        projectModalImage.src = details.image;
+                        projectModal.classList.remove('modal-enter');
+                    }
+                });
+            });
+            
+            const closeProjectModal = () => {
+                projectModal.classList.add('modal-enter');
+            };
+            
+            projectModalOverlay.addEventListener('click', closeProjectModal);
+            projectModalClose.addEventListener('click', closeProjectModal);
+            
+
+            // --- Logika Dropdown Kontak Cepat ---
+            const contactDropdownButton = document.getElementById('contact-dropdown-button');
+            const contactDropdownMenu = document.getElementById('contact-dropdown-menu');
+            
+            contactDropdownButton.addEventListener('click', () => {
+                contactDropdownMenu.classList.toggle('hidden');
+            });
+            
+            // Tutup jika klik di luar
+            window.addEventListener('click', (e) => {
+                if (!contactDropdownButton.contains(e.target) && !contactDropdownMenu.contains(e.target)) {
+                    contactDropdownMenu.classList.add('hidden');
+                }
+            });
+
+
+            // --- Logika API Gemini ---
+            const apiKey = ""; // Kunci API tidak diperlukan, akan ditangani oleh Canvas
+            
+            // Fungsi pemanggil Gemini dasar
+            async function getGeminiResponse(prompt, systemInstruction = "") {
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    systemInstruction: systemInstruction ? { parts: [{ text: systemInstruction }] } : undefined,
+                };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
+                        return result.candidates[0].content.parts[0].text;
+                    } else {
+                        console.error("Respon API tidak valid:", result);
+                        return "Maaf, terjadi kesalahan saat mengambil respons AI.";
+                    }
+                } catch (error) {
+                    console.error("Fetch error:", error);
+                    return "Maaf, tidak dapat terhubung ke layanan AI. Periksa koneksi Anda.";
+                }
+            }
+            
+            // Fitur 1: Generator Ide Proyek
+            const ideaInput = document.getElementById('project-idea-input');
+            const ideaButton = document.getElementById('generate-idea-button');
+            const ideaOutput = document.getElementById('project-idea-output');
+            const ideaSpinner = document.getElementById('idea-spinner');
+            const ideaButtonText = document.getElementById('idea-button-text');
+            
+            ideaButton.addEventListener('click', async () => {
+                const topic = ideaInput.value.trim();
+                if (!topic) {
+                    ideaOutput.textContent = "Silakan masukkan topik terlebih dahulu.";
+                    ideaOutput.classList.remove('hidden');
+                    return;
+                }
+                
+                // Tampilkan loading
+                ideaButtonText.classList.add('hidden');
+                ideaSpinner.classList.remove('hidden');
+                ideaButton.disabled = true;
+                ideaOutput.classList.remove('hidden');
+                ideaOutput.textContent = "AI sedang mencari ide...";
+
+                const systemPrompt = "Anda adalah seorang mentor Sistem Informasi. Berikan satu ide proyek yang ringkas, kreatif, dan relevan dengan bidang Sistem Informasi berdasarkan kata kunci yang diberikan. Jawab dalam satu paragraf singkat.";
+                const prompt = `Berikan saya satu ide proyek Sistem Informasi yang berkaitan dengan: "${topic}"`;
+                
+                const response = await getGeminiResponse(prompt, systemPrompt);
+                
+                // Sembunyikan loading
+                ideaOutput.textContent = response;
+                ideaButtonText.classList.remove('hidden');
+                ideaSpinner.classList.add('hidden');
+                ideaButton.disabled = false;
+            });
+            
+            // Fitur 2: Asisten Penulis Pesan
+            const messageIdeaInput = document.getElementById('message-idea');
+            const userNameInput = document.getElementById('user-name');
+            const messageButton = document.getElementById('generate-message-button');
+            const messageOutputContainer = document.getElementById('message-output-container');
+            const messageOutput = document.getElementById('message-output');
+            const messageSpinner = document.getElementById('message-spinner');
+            const messageButtonText = document.getElementById('message-button-text');
+            
+            messageButton.addEventListener('click', async () => {
+                const idea = messageIdeaInput.value.trim();
+                const userName = userNameInput.value.trim() || "Pengunjung"; // Default jika nama kosong
+                
+                if (!idea) {
+                    messageOutput.textContent = "Silakan masukkan ide pesan Anda terlebih dahulu.";
+                    messageOutputContainer.classList.remove('hidden');
+                    return;
+                }
+                
+                // Tampilkan loading
+                messageButtonText.classList.add('hidden');
+                messageSpinner.classList.remove('hidden');
+                messageButton.disabled = true;
+                messageOutputContainer.classList.remove('hidden');
+                messageOutput.textContent = "AI sedang menulis draf...";
+
+                const systemPrompt = "Anda adalah asisten penulis yang sopan dan profesional. Tugas Anda adalah mengubah ide pesan singkat dari pengguna menjadi draf email/pesan yang lengkap, sopan, dan formal. Gunakan Bahasa Indonesia yang baik. Sapa 'Kuat' sebagai penerima pesan.";
+                const prompt = `Nama saya ${userName}. Ubah ide pesan saya ini: "${idea}" menjadi draf pesan yang sopan untuk dikirimkan ke Kuat.`;
+                
+                const response = await getGeminiResponse(prompt, systemPrompt);
+                
+                // Sembunyikan loading
+                messageOutput.textContent = response;
+                messageButtonText.classList.remove('hidden');
+                messageSpinner.classList.add('hidden');
+                messageButton.disabled = false;
+            });
+
+        });
+    </script>
+</body>
+</html>
